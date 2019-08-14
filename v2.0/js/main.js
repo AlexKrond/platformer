@@ -7,6 +7,8 @@ window.addEventListener("keydown", keyDown);
 window.addEventListener("keyup", keyUp);
 
 const platformsNum = 20,
+      jumpForce = -8,
+      gravity = 0.3,
       hw = 32,
       hh = hw;
 let hx = canvas.width / 2 ^ 0,
@@ -56,8 +58,16 @@ function update() {
   // Движение с ускорение и замедлением будет
   //
 
+  hyv = hyv ? (hyv + gravity) : 0;
+
+
   hx += hxv;
   hy += hyv;
+
+  if (hy >= (canvas.height - hh)) {
+    hy = canvas.height - hh;
+    hyv = 0;
+  }
 
   context.fillStyle = "black";
   context.fillRect(0, 0, canvas.width, canvas.height);
@@ -71,16 +81,21 @@ function update() {
   context.fillRect(hx, hy, hw, hh);
 }
 
+// TODO: Исправить баг при одновременном нажатии клавиш (вверх + право/лево + лево/право [право/лево отпускаем])
 
 function keyDown(event) {
   switch (event.code) {
     case "ArrowLeft":
       goLeft = true;
+      goRight = false;
       break;
     case "ArrowRight":
       goRight = true;
+      goLeft = false;
       break;
-    // case "ArrowUp":
+  }
+  if (event.code === "ArrowUp" && hyv === 0) {
+    hyv = jumpForce;
   }
 }
 
