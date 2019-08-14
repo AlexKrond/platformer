@@ -65,9 +65,14 @@ function update() {
   hy += hyv;
 
   if (hy >= (canvas.height - hh)) {
-    hy = canvas.height - hh;
-    hyv = 0;
+    if (hyv && hyv > 1) {
+      hyv = -hyv + 2;
+    } else {
+      hy = canvas.height - hh;
+      hyv = 0;
+    }
   }
+
 
   context.fillStyle = "black";
   context.fillRect(0, 0, canvas.width, canvas.height);
