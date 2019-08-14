@@ -1,0 +1,21 @@
+html, body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  text-align: center;
+}
+
+.world {
+  width: 1200px;
+  height: 600px;
+
+  border: 2px solid black;
+}
