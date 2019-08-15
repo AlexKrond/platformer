@@ -10,7 +10,7 @@ const platformsNum = 20,
       acceleration = 0.1,
       maxSpeed = 7,
       startSpeed = 2,
-      jumpForce = 10,
+      jumpForce = 8,
       bound = 0.78,
       gravity = 0.4,
       hw = 32,
@@ -119,7 +119,7 @@ function update() {
       case "bottom":
         wasCollide = true;
         hy = platforms[i].y - hh;
-        rebound(platforms[i].x, platforms[i].y, platforms[i].w, platforms[i].h);
+        rebound(platforms[i].x, platforms[i].y);
         break;
     }
   }
@@ -239,7 +239,7 @@ function isCollide(nextHx, nextHy, hw, hh, p) {
 
 
 // Вертикальный отскок от поверхностей
-function rebound(px, py, pw, ph) {
+function rebound(px, py) {
   if ((hy + hh) >= py) {
     if (jump) {
       hyv = -jumpForce;
