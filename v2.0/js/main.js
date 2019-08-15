@@ -102,14 +102,11 @@ function update() {
   for (let i = 0; i < platforms.length; i++) {
     const collide = isCollide(hx + hxv, hy + hyv, hw, hh, platforms[i]);
 
-    if (collide !== "none") console.log(collide);
-
     switch (collide) {
       case "none":
         break;
 
-      case "left":
-      case "right":
+      case "side":
         hxv = -hxv * 0.5;
         break;
 
@@ -147,6 +144,50 @@ function win() {
 
 
 // Проверка коллизии
+function isCollide(nextHx, nextHy, hw, hh, p) {
+  if ((nextHx + hw) <= p.x ||
+      nextHy >= (p.y + p.h) ||
+      nextHx >= (p.x + p.w) ||
+      (nextHy + hh) <= p.y) {
+    return "none";
+  }
+
+  if ((hy + hh) <= p.y) {
+    return "bottom";
+  }
+
+  if (hy >= (p.y + p.h)) {
+    return "top";
+  }
+
+  return "side";
+}
+
+// function isCollide(nextHx, nextHy, hw, hh, p) {
+//   const nextHCentreX = nextHx + hw / 2;
+//   const nextHCentreY = nextHy + hh / 2;
+//
+//   const hCentreX = hx + hw / 2;
+//   const hCentreY = hy + hh / 2;
+//
+//   const pCentreX = p.x + p.w / 2;
+//   const pCentreY = p.y + p.h / 2;
+//
+//   // Определить под каким углом
+//
+//   const tan = (nextHCentreY - pCentreY) / (nextHCentreX - pCentreX);
+//
+//   console.log(tan)
+//
+// }
+
+// function isCollide(hx, hy, hw, hh, p) {
+//   const hLeftBtwP = (hx < (p.x + p.w)) && (hx > p.x);
+//   const hRightBtwP = ((hx + hw) > p.x) && ((hx + hw) < (p.x + p.w));
+//   const hTopBtwP = (hy < (p.y + p.h)) && (hy > p.y);
+//   const hBottomBtwP = ((hy + hh) > p.y) && ((hy + hh) < (p.y + p.h));
+// }
+
 // function isCollide(hx, hy, hw, hh, p) {
 //   if ((hx + hw) <= p.x ||
 //       hy >= (p.y + p.h) ||
@@ -177,24 +218,24 @@ function win() {
 //   }
 // }
 
-function isCollide(hx, hy, hw, hh, p) {
-  let dx=(hx+hw/2)-(p.x+p.w/2);
-  let dy=(hy+hh/2)-(p.y+p.h/2);
-  let width=(hw+p.w)/2;
-  let height=(hh+p.h)/2;
-  let crossWidth=width*dy;
-  let crossHeight=height*dx;
-  let collision='none';
-
-  if(Math.abs(dx) <= width && Math.abs(dy) <= height) {
-    if(crossWidth > crossHeight) {
-      collision= (crossWidth > -crossHeight) ? 'top' : 'left';
-    } else {
-      collision= (crossWidth > -crossHeight) ? 'right' : 'bottom';
-    }
-  }
-  return collision;
-}
+// function isCollide(hx, hy, hw, hh, p) {
+//   let dx=(hx+hw/2)-(p.x+p.w/2);
+//   let dy=(hy+hh/2)-(p.y+p.h/2);
+//   let width=(hw+p.w)/2;
+//   let height=(hh+p.h)/2;
+//   let crossWidth=width*dy;
+//   let crossHeight=height*dx;
+//   let collision='none';
+//
+//   if(Math.abs(dx) <= width && Math.abs(dy) <= height) {
+//     if(crossWidth > crossHeight) {
+//       collision= (crossWidth > -crossHeight) ? 'top' : 'left';
+//     } else {
+//       collision= (crossWidth > -crossHeight) ? 'right' : 'bottom';
+//     }
+//   }
+//   return collision;
+// }
 
 
 // Вертикальный отскок от поверхностей
