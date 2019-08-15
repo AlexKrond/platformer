@@ -10,26 +10,19 @@ const platformsNum = 20,
       acceleration = 0.1,
       maxSpeed = 7,
       startSpeed = 2,
-      jumpForce = 8,
+      jumpForce = 10,
       bound = 0.78,
-      gravity = 0.3,
+      gravity = 0.4,
       hw = 32,
       hh = hw;
 let hx = canvas.width / 2 ^ 0,
-    hy = canvas.height - hh,
+    hy = canvas.height - hh - 10,
     hxv = 0,
     hyv = 0,
     goLeft = false,
     goRight = false,
     jump = false,
-    platforms = [
-      {
-        x: -2000,
-        y: canvas.height,
-        w: canvas.width + 4000,
-        h: 50
-      }
-    ];
+    platforms = [];
 
 
 init();
@@ -37,6 +30,15 @@ const gameLoop = setInterval(update, 1000/50);
 
 
 function init() {
+
+  platforms = [
+    {
+      x: -2000,
+      y: canvas.height,
+      w: canvas.width + 4000,
+      h: 50
+    }
+  ];
 
   for (let i = 0; i < platformsNum; i++) {
     platforms.push({
@@ -65,9 +67,9 @@ function update() {
 
 
   // WIN!!!
-  // if (hy <= 0) {
-  //   win();
-  // }
+  if ((hy + hh) <= 0) {
+    win();
+  }
 
 
   // Движение с ускорением и остановкой
@@ -96,17 +98,38 @@ function update() {
 
 
   // Проверка коллизий
-  let collide = false;
+  let wasCollide = false;
   for (let i = 0; i < platforms.length; i++) {
-    if (isCollide(hx + hxv, hy + hyv, hw, hh, platforms[i].x, platforms[i].y, platforms[i].w, platforms[i].h)) {
-      hy = platforms[i].y - hh;
-      collide = true;
-      rebound(platforms[i].x, platforms[i].y, platforms[i].w, platforms[i].h);
+    const collide = isCollide(hx + hxv, hy + hyv, hw, hh, platforms[i]);
+
+    if (collide !== "none") console.log(collide);
+
+    switch (collide) {
+      case "none":
+        break;
+
+      case "left":
+      case "right":
+        hxv = -hxv * 0.5;
+        break;
+
+      case "top":
+        wasCollide = true;
+        hy = platforms[i].y + platforms[i].h;
+        hyv = 0;
+        break;
+
+      case "bottom":
+        wasCollide = true;
+        hy = platforms[i].y - hh;
+        rebound(platforms[i].x, platforms[i].y, platforms[i].w, platforms[i].h);
+        break;
     }
   }
 
   hx += hxv;
-  hy = collide ? hy : (hy + hyv);
+  hy = wasCollide ? hy : (hy + hyv);
+
 }
 
 
@@ -124,11 +147,53 @@ function win() {
 
 
 // Проверка коллизии
-function isCollide(hx, hy, hw, hh, px, py, pw, ph) {
-  return !((hx + hw) < px ||
-          hy > (py + ph) ||
-          hx > (px + pw) ||
-          (hy + hh) < py);
+// function isCollide(hx, hy, hw, hh, p) {
+//   if ((hx + hw) <= p.x ||
+//       hy >= (p.y + p.h) ||
+//       hx >= (p.x + p.w) ||
+//       (hy + hh) <= p.y) {
+//     return "none";
+//   }
+//
+//   if ( ((hy + hh) > p.y) && ((hy + hh) < (p.y + p.h)) ) {
+//     return "bottom";
+//   }
+//
+//   if ( (hx < (p.x + p.w)) && (hx > p.x) &&
+//       (((hy > p.y) && (hy < (p.y + p.h))) ||
+//           (((hy + hh) > p.y) && ((hy + hh) < (p.y + p.h))) ||
+//           ((hy > p.y) && ((hy + hh) < (p.y + p.h))) ||
+//           ((hy < p.y) && ((hy + hh) > (p.y + p.h))) )) {
+//     return "left";
+//
+//   }
+//   if ( ((hx + hw) > p.x) && ((hx + hw) < (p.x + p.w)) ) {
+//     return "right";
+//
+//   }
+//
+//   if ( (hy < (p.y + p.h)) && (hy > p.y) ) {
+//     return "top";
+//   }
+// }
+
+function isCollide(hx, hy, hw, hh, p) {
+  let dx=(hx+hw/2)-(p.x+p.w/2);
+  let dy=(hy+hh/2)-(p.y+p.h/2);
+  let width=(hw+p.w)/2;
+  let height=(hh+p.h)/2;
+  let crossWidth=width*dy;
+  let crossHeight=height*dx;
+  let collision='none';
+
+  if(Math.abs(dx) <= width && Math.abs(dy) <= height) {
+    if(crossWidth > crossHeight) {
+      collision= (crossWidth > -crossHeight) ? 'top' : 'left';
+    } else {
+      collision= (crossWidth > -crossHeight) ? 'right' : 'bottom';
+    }
+  }
+  return collision;
 }
 
 
@@ -142,7 +207,7 @@ function rebound(px, py, pw, ph) {
       hyv = -hyv * bound;
 
     } else {
-      hy = py - hh;
+      // hy = py - hh;
       hyv = 0;
     }
   }
