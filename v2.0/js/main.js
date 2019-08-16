@@ -7,6 +7,7 @@ window.addEventListener("keydown", keyDown);
 window.addEventListener("keyup", keyUp);
 
 const platformsNum = 40,
+      crashFrequency = 1,
       acceleration = 0.1,
       maxSpeed = 7,
       startSpeed = 2,
@@ -27,7 +28,8 @@ let hx = canvas.width / 2 - hw / 2,
     bonusScore = 0,
     frameScore = 0,
     frames = 0;
-
+let lastCrash = 0,
+    crashedPlatforms = [];
 
 init();
 const gameLoop = setInterval(update, 1000/50);
@@ -77,6 +79,10 @@ function update() {
   context.fillStyle = "gold";
   for (let i = 0; i < bonus.length; i++) {
     context.fillRect(bonus[i].x, bonus[i].y, bonus[i].w, bonus[i].h);
+  }
+
+  for (let i = 0; i < crashedPlatforms.length; i++) {
+    crashedPlatforms[i].draw();
   }
 
   context.fillStyle = "red";
@@ -146,6 +152,13 @@ function update() {
         wasCollide = true;
         hy = platforms[i].y - hh;
         rebound(platforms[i].x, platforms[i].y);
+
+        // Разлом платформы
+        if (Math.random() < crashFrequency && lastCrash !== i) {
+          if (lastCrash !== 0) crashPlatform(i);
+          lastCrash = i;
+        }
+
         break;
     }
   }
@@ -172,11 +185,33 @@ function update() {
 
 function drop() {
   for (let i = 0; i < platforms.length; i++) {
-    platforms[i].y += 0.5;
+    if (platforms[i]) {
+      platforms[i].y += 0.5;
+
+      if (platforms[i].y > (canvas.height + hh)) {
+        platforms.splice(i, 1);
+      }
+    }
   }
 
   for (let i = 0; i < bonus.length; i++) {
-    bonus[i].y += 0.5;
+    if (bonus[i]) {
+      bonus[i].y += 0.5;
+
+      if (bonus[i].y > canvas.height) {
+        bonus.splice(i, 1);
+      }
+    }
+  }
+
+  for (let i = 0; i < crashedPlatforms.length; i++) {
+    if (crashedPlatforms[i]) {
+      crashedPlatforms[i].y += 5;
+
+      if (crashedPlatforms[i].y > canvas.height) {
+        crashedPlatforms.splice(i, 1);
+      }
+    }
   }
 }
 
@@ -197,6 +232,11 @@ function spawnPlatforms() {
       w: hw,
       h: hh
   });
+}
+
+function crashPlatform(i) {
+  crashedPlatforms.push(new crashedPlatform(platforms[i].x, platforms[i].y, platforms[i].w, platforms[i].h));
+  platforms[i].y = canvas.height + hh + 10;
 }
 
 // Если выиграл
@@ -307,5 +347,37 @@ function keyUp(event) {
     case "ArrowUp":
       jump = false;
       break;
+  }
+}
+
+class crashedPlatform {
+  constructor(x, y, w, h) {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+  }
+
+  draw() {
+    const angle = 35;
+    // context.fillStyle = "lightslategray";
+    // context.fillStyle = "lightgray";
+    context.fillStyle = "gray";
+
+    context.save();
+    context.translate(this.x, this.y);
+
+    context.rotate(angle * Math.PI / 180);
+
+    context.fillRect(0, 0, this.w / 2, this.h);
+
+    context.restore();
+    context.save();
+    context.translate(this.x + this.w, this.y);
+
+    context.rotate((90 - angle) * Math.PI / 180);
+    context.fillRect(0, 0, this.h, this.w / 2);
+
+    context.restore();
   }
 }
