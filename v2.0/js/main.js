@@ -163,80 +163,6 @@ function isCollide(nextHx, nextHy, hw, hh, p) {
   return "side";
 }
 
-// function isCollide(nextHx, nextHy, hw, hh, p) {
-//   const nextHCentreX = nextHx + hw / 2;
-//   const nextHCentreY = nextHy + hh / 2;
-//
-//   const hCentreX = hx + hw / 2;
-//   const hCentreY = hy + hh / 2;
-//
-//   const pCentreX = p.x + p.w / 2;
-//   const pCentreY = p.y + p.h / 2;
-//
-//   // Определить под каким углом
-//
-//   const tan = (nextHCentreY - pCentreY) / (nextHCentreX - pCentreX);
-//
-//   console.log(tan)
-//
-// }
-
-// function isCollide(hx, hy, hw, hh, p) {
-//   const hLeftBtwP = (hx < (p.x + p.w)) && (hx > p.x);
-//   const hRightBtwP = ((hx + hw) > p.x) && ((hx + hw) < (p.x + p.w));
-//   const hTopBtwP = (hy < (p.y + p.h)) && (hy > p.y);
-//   const hBottomBtwP = ((hy + hh) > p.y) && ((hy + hh) < (p.y + p.h));
-// }
-
-// function isCollide(hx, hy, hw, hh, p) {
-//   if ((hx + hw) <= p.x ||
-//       hy >= (p.y + p.h) ||
-//       hx >= (p.x + p.w) ||
-//       (hy + hh) <= p.y) {
-//     return "none";
-//   }
-//
-//   if ( ((hy + hh) > p.y) && ((hy + hh) < (p.y + p.h)) ) {
-//     return "bottom";
-//   }
-//
-//   if ( (hx < (p.x + p.w)) && (hx > p.x) &&
-//       (((hy > p.y) && (hy < (p.y + p.h))) ||
-//           (((hy + hh) > p.y) && ((hy + hh) < (p.y + p.h))) ||
-//           ((hy > p.y) && ((hy + hh) < (p.y + p.h))) ||
-//           ((hy < p.y) && ((hy + hh) > (p.y + p.h))) )) {
-//     return "left";
-//
-//   }
-//   if ( ((hx + hw) > p.x) && ((hx + hw) < (p.x + p.w)) ) {
-//     return "right";
-//
-//   }
-//
-//   if ( (hy < (p.y + p.h)) && (hy > p.y) ) {
-//     return "top";
-//   }
-// }
-
-// function isCollide(hx, hy, hw, hh, p) {
-//   let dx=(hx+hw/2)-(p.x+p.w/2);
-//   let dy=(hy+hh/2)-(p.y+p.h/2);
-//   let width=(hw+p.w)/2;
-//   let height=(hh+p.h)/2;
-//   let crossWidth=width*dy;
-//   let crossHeight=height*dx;
-//   let collision='none';
-//
-//   if(Math.abs(dx) <= width && Math.abs(dy) <= height) {
-//     if(crossWidth > crossHeight) {
-//       collision= (crossWidth > -crossHeight) ? 'top' : 'left';
-//     } else {
-//       collision= (crossWidth > -crossHeight) ? 'right' : 'bottom';
-//     }
-//   }
-//   return collision;
-// }
-
 
 // Вертикальный отскок от поверхностей
 function rebound(px, py) {
@@ -248,7 +174,6 @@ function rebound(px, py) {
       hyv = -hyv * bound;
 
     } else {
-      // hy = py - hh;
       hyv = 0;
     }
   }
