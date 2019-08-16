@@ -55,8 +55,8 @@ function init() {
 
   bonus = [
     {
-      x: Math.random()*(canvas.width - hw),
-      y: Math.random()*(canvas.height - 400),
+      x: canvas.width / 2 - 90,
+      y: canvas.height - 100 - hh,
       w: hw,
       h: hh
     }
