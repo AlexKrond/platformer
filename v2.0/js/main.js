@@ -6,23 +6,25 @@ const context = canvas.getContext("2d");
 window.addEventListener("keydown", keyDown);
 window.addEventListener("keyup", keyUp);
 
-const platformsNum = 20,
+const platformsNum = 40,
       acceleration = 0.1,
       maxSpeed = 7,
       startSpeed = 2,
-      jumpForce = 8,
+      jumpForce = 10,
       bound = 0.78,
       gravity = 0.4,
       hw = 32,
       hh = hw;
-let hx = canvas.width / 2 ^ 0,
-    hy = canvas.height - hh - 10,
+let hx = canvas.width / 2 - hw / 2,
+    hy = canvas.height - hh - 100,
     hxv = 0,
     hyv = 0,
     goLeft = false,
     goRight = false,
     jump = false,
-    platforms = [];
+    platforms = [],
+    score = 0,
+    frames = 0;
 
 
 init();
@@ -33,17 +35,17 @@ function init() {
 
   platforms = [
     {
-      x: -2000,
-      y: canvas.height,
-      w: canvas.width + 4000,
-      h: 50
+      x: canvas.width / 2 - 100,
+      y: canvas.height - 100,
+      w: 200,
+      h: 30
     }
   ];
 
   for (let i = 0; i < platformsNum; i++) {
     platforms.push({
       x: Math.random()*canvas.width - 100,
-      y: Math.random()*canvas.height,
+      y: Math.random()*canvas.height - 200,
       w: Math.random()*150 + 100,
       h: Math.random()*15 + 15
     })
@@ -65,10 +67,19 @@ function update() {
   context.fillStyle = "red";
   context.fillRect(hx, hy, hw, hh);
 
+  context.fillStyle = "red";
+  context.font = "20px Arial";
+  context.fillText(`Score: ${score}`, 10, 25);
+
 
   // WIN!!!
   if ((hy + hh) <= 0) {
     win();
+  }
+
+  //LOSE(
+  if (hy > canvas.height) {
+    lose();
   }
 
 
@@ -100,8 +111,8 @@ function update() {
   // Проверка коллизий
   let wasCollide = false;
   for (let i = 0; i < platforms.length; i++) {
-    const collide = isCollide(hx + hxv, hy + hyv, hw, hh, platforms[i]);
-
+    const collide = isCollide(hx + hxv, hy + hyv + 0.5, hw, hh, platforms[i]);
+    if (collide !== "none")console.log(collide);
     switch (collide) {
       case "none":
         break;
@@ -127,8 +138,28 @@ function update() {
   hx += hxv;
   hy = wasCollide ? hy : (hy + hyv);
 
+  score = frames++ / 10 ^ 0;
+  dropPlatforms();
+  if (frames % 300 === 0) spawnPlatforms();
 }
 
+
+function dropPlatforms() {
+  for (let i = 0; i < platforms.length; i++) {
+    platforms[i].y += 0.5;
+  }
+}
+
+function spawnPlatforms() {
+  for (let i = 0; i < 5; i++) {
+    platforms.push({
+      x: Math.random() * canvas.width - 100,
+      y: Math.random() * -300,
+      w: Math.random()*150 + 100,
+      h: Math.random()*15 + 15
+    })
+  }
+}
 
 // Если выиграл
 function win() {
@@ -142,6 +173,27 @@ function win() {
   context.fillText("WIN!", canvas.width / 2 - 100, canvas.height / 2);
 }
 
+
+// Если проиграл
+function lose() {
+  clearInterval(gameLoop);
+
+  context.fillStyle = "black";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+
+  context.fillStyle = "white";
+  context.font = "100px Arial";
+  context.fillText("LOSE :(", canvas.width / 2 - 200, canvas.height / 2);
+  context.fillText(`Your score: ${score}`, canvas.width / 2 - 320, canvas.height / 2 + 200);
+
+  const highScore = localStorage.highscore || 0;
+  if (score > highScore) {
+    localStorage.setItem("highscore", score);
+  }
+
+  context.font = "50px Arial";
+  context.fillText(`Highscore: ${localStorage.highscore}`, canvas.width / 2 - 180, canvas.height / 2 - 200);
+}
 
 // Проверка коллизии
 function isCollide(nextHx, nextHy, hw, hh, p) {
@@ -183,16 +235,18 @@ function rebound(px, py) {
 // Нажатие клавиши
 function keyDown(event) {
   switch (event.code) {
+    case "KeyA":
     case "ArrowLeft":
       goLeft = true;
       goRight = false;
       break;
+    case "KeyD":
     case "ArrowRight":
       goRight = true;
       goLeft = false;
       break;
   }
-  if (event.code === "ArrowUp") {
+  if (event.code === "KeyW" || event.code === "ArrowUp") {
     jump = true;
   }
 }
@@ -201,12 +255,15 @@ function keyDown(event) {
 // Отпускание клавиши
 function keyUp(event) {
   switch (event.code) {
+    case "KeyA":
     case "ArrowLeft":
       goLeft = false;
       break;
+    case "KeyD":
     case "ArrowRight":
       goRight = false;
       break;
+    case "KeyW":
     case "ArrowUp":
       jump = false;
       break;
