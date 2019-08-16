@@ -10,7 +10,7 @@ const platformsNum = 40,
       acceleration = 0.1,
       maxSpeed = 7,
       startSpeed = 2,
-      jumpForce = 10,
+      jumpForce = 15,
       bound = 0.78,
       gravity = 0.4,
       hw = 32,
@@ -23,7 +23,9 @@ let hx = canvas.width / 2 - hw / 2,
     goRight = false,
     jump = false,
     platforms = [],
-    score = 0,
+    bonus = [],
+    bonusScore = 0,
+    frameScore = 0,
     frames = 0;
 
 
@@ -51,6 +53,14 @@ function init() {
     })
   }
 
+  bonus = [
+    {
+      x: Math.random()*(canvas.width - hw),
+      y: Math.random()*(canvas.height - 400),
+      w: hw,
+      h: hh
+    }
+  ];
 }
 
 function update() {
@@ -64,20 +74,25 @@ function update() {
     context.fillRect(platforms[i].x, platforms[i].y, platforms[i].w, platforms[i].h);
   }
 
+  context.fillStyle = "gold";
+  for (let i = 0; i < bonus.length; i++) {
+    context.fillRect(bonus[i].x, bonus[i].y, bonus[i].w, bonus[i].h);
+  }
+
   context.fillStyle = "red";
   context.fillRect(hx, hy, hw, hh);
 
   context.fillStyle = "red";
   context.font = "20px Arial";
-  context.fillText(`Score: ${score}`, 10, 25);
+  context.fillText(`Score: ${frameScore + bonusScore}`, 10, 25);
 
 
   // WIN!!!
-  if ((hy + hh) <= 0) {
-    win();
-  }
+  // if ((hy + hh) <= 0) {
+  //   win();
+  // }
 
-  //LOSE(
+  // LOSE(
   if (hy > canvas.height) {
     lose();
   }
@@ -108,11 +123,11 @@ function update() {
   hyv = hyv ? (hyv + gravity) : gravity;
 
 
-  // Проверка коллизий
+  // Проверка коллизий с платформами
   let wasCollide = false;
   for (let i = 0; i < platforms.length; i++) {
     const collide = isCollide(hx + hxv, hy + hyv + 0.5, hw, hh, platforms[i]);
-    if (collide !== "none")console.log(collide);
+    // if (collide !== "none")console.log(collide);
     switch (collide) {
       case "none":
         break;
@@ -135,18 +150,33 @@ function update() {
     }
   }
 
+
+  // Проверка коллизий с бонусами
+  for (let i = 0; i < bonus.length; i++) {
+    const collide = isCollide(hx + hxv, hy + hyv, hw, hh, bonus[i]);
+    if (collide !== "none") {
+      bonus.splice(i, 1);
+      bonusScore += 100;
+    }
+  }
+
+
   hx += hxv;
   hy = wasCollide ? hy : (hy + hyv);
 
-  score = frames++ / 10 ^ 0;
-  dropPlatforms();
+  frameScore = frames++ / 10 ^ 0;
+  drop();
   if (frames % 300 === 0) spawnPlatforms();
 }
 
 
-function dropPlatforms() {
+function drop() {
   for (let i = 0; i < platforms.length; i++) {
     platforms[i].y += 0.5;
+  }
+
+  for (let i = 0; i < bonus.length; i++) {
+    bonus[i].y += 0.5;
   }
 }
 
@@ -159,6 +189,14 @@ function spawnPlatforms() {
       h: Math.random()*15 + 15
     })
   }
+
+  const lastP = platforms.length - 1;
+  bonus.push({
+      x: platforms[lastP].x + platforms[lastP].w / 2 - hw / 2,
+      y: platforms[lastP].y - hh,
+      w: hw,
+      h: hh
+  });
 }
 
 // Если выиграл
@@ -177,6 +215,8 @@ function win() {
 // Если проиграл
 function lose() {
   clearInterval(gameLoop);
+
+  const  score = frameScore + bonusScore;
 
   context.fillStyle = "black";
   context.fillRect(0, 0, canvas.width, canvas.height);
