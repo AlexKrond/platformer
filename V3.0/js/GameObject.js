@@ -1,3 +1,4 @@
+"use strict";
 
 class GameObject {
   constructor({x, y, w, h, xv, yv, collides = true, color = "white"}) {

@@ -1,3 +1,4 @@
+"use strict";
 
 import GameObject from "./GameObject.js";
 
