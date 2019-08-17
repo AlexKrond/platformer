@@ -3,6 +3,9 @@
 const canvas = document.querySelector("#game");
 const context = canvas.getContext("2d");
 
+canvas.width = document.documentElement.clientWidth - 20;
+canvas.height = document.documentElement.clientHeight - 70;
+
 window.addEventListener("keydown", keyDown);
 window.addEventListener("keyup", keyUp);
 
@@ -300,7 +303,7 @@ function isCollide(nextHx, nextHy, hw, hh, p) {
 function rebound(px, py) {
   if ((hy + hh) >= py) {
     if (jump) {
-      hyv = -jumpForce;
+      hyv = -jumpForce; // TODO: Добавить проверку на текущий hyv
 
     } else if (hyv && ((hyv - (hyv * bound)) > 1)) {
       hyv = -hyv * bound;
