@@ -2,7 +2,7 @@
 
 import Hero from "./Hero.js"
 import Bonus from "./Bonus.js";
-
+import Platform from "./Platform.js";
 
 const bonus = new Bonus({
   x: 10,
