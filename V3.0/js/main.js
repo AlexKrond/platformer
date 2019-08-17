@@ -1,8 +1,11 @@
 "use strict";
 
+import Game from "./Game.js";
 import Hero from "./Hero.js"
 import Bonus from "./Bonus.js";
 import Platform from "./Platform.js";
+
+export const game = new Game(document.querySelector("#game"));
 
 const bonus = new Bonus({
   x: 10,
@@ -14,8 +17,6 @@ const bonus = new Bonus({
   collides: false
 });
 
-console.log(bonus);
-
 const hero = new Hero({
   x: 10,
   y: 20,
@@ -26,4 +27,7 @@ const hero = new Hero({
   collides: true
 });
 
+console.log(bonus);
 console.log(hero);
+
+hero.draw();

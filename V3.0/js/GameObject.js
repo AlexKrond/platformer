@@ -1,5 +1,7 @@
 "use strict";
 
+import {game} from "./main.js"
+
 class GameObject {
   constructor({x, y, w, h, xv, yv, collides = true, color = "white"}) {
     this.x = x;
@@ -10,6 +12,10 @@ class GameObject {
     this.yv = yv;
     this.collides = collides;
     this.color = color;
+  }
+
+  draw() {
+    game.ctx.fillRect(this.x, this.y, this.w, this.h);
   }
 }
 
