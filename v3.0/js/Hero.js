@@ -89,7 +89,7 @@ class Hero extends GameObject {
       if (this.jump) {
         this.yv = Math.min(-this.#jumpForce, -this.yv * this.game.bound);
 
-      } else if (this.yv && ((this.yv - (this.yv * this.game.bound)) > 10)) {
+      } else if (this.yv && ((this.yv - (this.yv * this.game.bound)) > 20)) {
         this.yv = -this.yv * this.game.bound;
 
       } else {

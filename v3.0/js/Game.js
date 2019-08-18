@@ -35,6 +35,13 @@ class Game {
         w: 32,
         h: 32,
         color: "gold"
+      }, this),
+      new Bonus({
+        x: 1000,
+        y: 200,
+        w: 32,
+        h: 32,
+        color: "gold"
       }, this)
     ];
 
