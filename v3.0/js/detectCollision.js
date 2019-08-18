@@ -6,7 +6,7 @@ function detectCollision(obj1, obj2, deltaTime) {
     return "none";
   }
 
-  if ((obj1.y + obj1.h) <= obj2.y) {
+  if (+(obj1.y + obj1.h).toFixed(5) <= +obj2.y.toFixed(5)) {
     return "bottom";
   }
 

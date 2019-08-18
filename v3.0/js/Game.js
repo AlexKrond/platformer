@@ -17,10 +17,11 @@ class Game {
     this.bound = c.bound;
     this.gravity = c.gravity;
 
+    Bonus.img.src = "sprites/bonus.png";
+
     this.hero = new Hero({
       x: this.width / 2 - c.hw / 2,
-      // y: this.height - c.hh - 100,
-      y: 100,
+      y: this.height - c.hh - 100,
       w: c.hw,
       h: c.hh,
       yv: 0,
@@ -34,7 +35,7 @@ class Game {
         w: 32,
         h: 32,
         color: "gold"
-      })
+      }, this)
     ];
 
     new InputHandler(this.hero);
@@ -45,7 +46,15 @@ class Game {
   }
 
   start() {
-    this.platforms = [];
+    this.platforms = [
+      new Platform({
+        x: this.width / 2 - 100,
+        y: this.height - 100,
+        w: 200,
+        h: 30,
+        color: "black"
+      })
+    ];
 
     for (let i = 0; i < (this.height / 200); i++) {
       Platform.spawnNew(this, i * 200 - 100);
@@ -61,7 +70,8 @@ class Game {
   }
 
   draw(ctx) {
-    ctx.clearRect(0, 0, this.width, this.height);
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, this.width, this.height);
 
     [...this.platforms, ...this.bonus, this.hero].forEach(gameObject => gameObject.draw(ctx));
   }

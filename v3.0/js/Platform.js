@@ -1,6 +1,6 @@
 "use strict";
 
-import GameObject from "./GameObject.js";
+import GameObject from "./GameObject.js"
 
 class Platform extends GameObject {
   constructor(props) {
