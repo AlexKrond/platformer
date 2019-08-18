@@ -1,6 +1,8 @@
 "use strict";
 
 const c = {
+  gameWidth:          document.documentElement.clientWidth,
+  gameHeight:         document.documentElement.clientHeight,
   platformsNum:       40,
   crashFrequency:     1,
   acceleration:       0.1,
