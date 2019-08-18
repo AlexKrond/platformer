@@ -10,6 +10,7 @@ const game = new Game();
 cnv.width = game.width;
 cnv.height = game.height;
 
+game.start();
 
 let lastTime = 0;
 

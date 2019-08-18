@@ -1,16 +1,17 @@
 "use strict";
 
 const c = {
-  gameWidth:          document.documentElement.clientWidth,
-  gameHeight:         document.documentElement.clientHeight,
+  gameWidth:          document.documentElement.clientWidth - 50,
+  gameHeight:         document.documentElement.clientHeight - 50,
+  screenMoveSpeed:    5,
   platformsNum:       40,
   crashFrequency:     1,
-  acceleration:       0.1,
-  maxSpeed:           7,
-  startSpeed:         2,
+  acceleration:       5,
+  maxSpeed:           100,
+  startSpeed:         40,
   jumpForce:          15,
   bound:              0.78,
-  gravity:            0.4,
+  gravity:            0,//3,
   hw:                 32,
   hh:                 32
 };
