@@ -16,11 +16,13 @@ class GameObject {
     this.isMoving = isMoving;
   }
 
-  update(deltaTime) {
+  screenMoving(deltaTime) {
     if (this.isMoving) {
       this.y += c.screenMoveSpeed / deltaTime;
     }
+  }
 
+  update(deltaTime) {
     this.x += this.xv / deltaTime;
     this.y += this.yv / deltaTime;
   }

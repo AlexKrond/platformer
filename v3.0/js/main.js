@@ -18,6 +18,7 @@ function gameLoop(timeStamp) {
   const deltaTime = timeStamp - lastTime;
   lastTime = timeStamp;
 
+  game.screenMoving(deltaTime);
   game.update(deltaTime);
   game.draw(ctx);
 

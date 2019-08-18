@@ -1,7 +1,8 @@
 "use strict";
 
-import GameObject from "./GameObject.js";
 import c from "./const.js"
+import detectCollision from "./detectCollision.js";
+import GameObject from "./GameObject.js";
 
 class Hero extends GameObject {
   #acceleration = c.acceleration;
@@ -32,7 +33,34 @@ class Hero extends GameObject {
 
     this.yv = this.yv ? (this.yv + this.game.gravity) : this.game.gravity;
 
-    super.update(deltaTime); // if not collide
+    let wasTopOrBottomCollision = false;
+    this.game.platforms.forEach(platform =>{
+      const collideSide = detectCollision(this, platform, deltaTime);
+
+      switch (collideSide) {
+        case "side":
+          this.xv = -this.xv * 0.5;
+          break;
+
+        case "top":
+          wasTopOrBottomCollision = true;
+          this.y = platform.y + platform.h;
+          this.yv = 0;
+          break;
+
+        case "bottom":
+          wasTopOrBottomCollision = true;
+          this.y = platform.y - this.h;
+          this.rebound(platform);
+          break;
+      }
+    });
+
+    if (wasTopOrBottomCollision){
+      this.x += this.xv / deltaTime;
+    } else {
+      super.update(deltaTime);
+    }
   }
 
   moveLeft() {
@@ -53,6 +81,20 @@ class Hero extends GameObject {
 
   stopping() {
     this.xv = (this.xv < 10 && this.xv > -10) ? 0 : this.xv + (-this.xv * 0.2);
+  }
+
+  rebound(platform) {
+    if ((this.y + this.h) >= platform.y) {
+      if (this.jump) {
+        this.yv = Math.min(-this.#jumpForce, -this.yv);
+
+      } else if (this.yv && ((this.yv - (this.yv * this.game.bound)) > 1)) {
+        this.yv = -this.yv * this.game.bound;
+
+      } else {
+        this.yv = 0;
+      }
+    }
   }
 }
 

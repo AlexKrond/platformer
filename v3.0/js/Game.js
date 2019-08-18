@@ -19,7 +19,8 @@ class Game {
 
     this.hero = new Hero({
       x: this.width / 2 - c.hw / 2,
-      y: this.height - c.hh - 100,
+      // y: this.height - c.hh - 100,
+      y: 100,
       w: c.hw,
       h: c.hh,
       yv: 0,
@@ -39,8 +40,8 @@ class Game {
     new InputHandler(this.hero);
 
 
-    console.log(this.hero);
-    console.log(this.bonus);
+    // console.log(this.hero);
+    // console.log(this.bonus);
   }
 
   start() {
@@ -49,6 +50,10 @@ class Game {
     for (let i = 0; i < (this.height / 200); i++) {
       Platform.spawnNew(this, i * 200 - 100);
     }
+  }
+
+  screenMoving(deltaTime) {
+    [...this.platforms, ...this.bonus, this.hero].forEach(gameObject => gameObject.screenMoving(deltaTime));
   }
 
   update(deltaTime) {
