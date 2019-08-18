@@ -17,6 +17,8 @@ class Game {
     this.bound = c.bound;
     this.gravity = c.gravity;
 
+    this.bonusScore = 0;
+
     Bonus.img.src = "sprites/bonus.png";
 
     this.hero = new Hero({
@@ -28,7 +30,7 @@ class Game {
       color: "red"
     }, this);
 
-    this.bonus = [
+    this.bonuses = [
       new Bonus({
         x: 10,
         y: 20,
@@ -69,18 +71,21 @@ class Game {
   }
 
   screenMoving(deltaTime) {
-    [...this.platforms, ...this.bonus, this.hero].forEach(gameObject => gameObject.screenMoving(deltaTime));
+    [...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => gameObject.screenMoving(deltaTime));
   }
 
   update(deltaTime) {
-    [...this.platforms, ...this.bonus, this.hero].forEach(gameObject => gameObject.update(deltaTime));
+    [...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => gameObject.update(deltaTime));
+
+    this.platforms = this.platforms.filter(platform => !platform.markedForDelete);
+    this.bonuses = this.bonuses.filter(bonus => !bonus.markedForDelete);
   }
 
   draw(ctx) {
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, this.width, this.height);
 
-    [...this.platforms, ...this.bonus, this.hero].forEach(gameObject => gameObject.draw(ctx));
+    [...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => gameObject.draw(ctx));
   }
 }
 

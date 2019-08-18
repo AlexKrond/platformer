@@ -57,6 +57,15 @@ class Hero extends GameObject {
       }
     });
 
+    this.game.bonuses.forEach(bonus => {
+      const collideSide = detectCollision(this, bonus, deltaTime);
+
+      if (collideSide !== "none") {
+        this.game.bonusScore += 100;
+        bonus.markedForDelete = true;
+      }
+    });
+
     if (wasTopOrBottomCollision) {
       this.x += this.xv / deltaTime;
     } else {
