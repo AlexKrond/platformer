@@ -99,8 +99,8 @@ class Game {
 
     [...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => gameObject.update(deltaTime));
 
-    this.platforms = this.platforms.filter(platform => !platform.markedForDelete);
-    this.bonuses = this.bonuses.filter(bonus => !bonus.markedForDelete);
+    this.platforms = this.platforms.filter(platform => !platform.markedForDeletion);
+    this.bonuses = this.bonuses.filter(bonus => !bonus.markedForDeletion);
 
     if (this.frames % Math.floor(2500 / this.screenMoveSpeed) === 0) {
       Platform.spawnNew(this, -50);

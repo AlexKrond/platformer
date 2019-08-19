@@ -12,7 +12,7 @@ class GameObject {
     this.yv = yv;
     this.collides = collides;
     this.color = color;
-    this.markedForDelete = false;
+    this.markedForDeletion = false;
     this.isMoving = isMoving;
   }
 

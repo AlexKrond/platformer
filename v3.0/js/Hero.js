@@ -62,7 +62,7 @@ class Hero extends GameObject {
 
       if (collideSide !== "none") {
         this.game.bonusScore += 100;
-        bonus.markedForDelete = true;
+        bonus.markedForDeletion = true;
       }
     });
 
