@@ -19,7 +19,7 @@ class Game {
     this.bound = c.bound;
     this.gravity = c.gravity;
 
-    this.frames = 0;
+    this.frames = 0; // TODO: отвязаться от фреймов, привязаться к something += CONST / deltaTime
     this.bonusScore = 0;
 
     Bonus.img.src = "sprites/bonus.png";
