@@ -35,7 +35,7 @@ class Bonus extends GameObject {
 
   rebound(platform) {
     if ((this.y + this.h) >= platform.y) {
-      if (this.yv && ((this.yv - (this.yv * this.game.bounce)) > 20)) {
+      if (this.yv && ((this.yv - (this.yv * this.game.bounce)) > this.game.nullifyBounce)) {
         this.yv = -this.yv * this.game.bounce;
 
       } else {

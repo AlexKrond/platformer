@@ -106,7 +106,7 @@ class Hero extends GameObject {
       if (this.jump) {
         this.yv = Math.min(-this.#jumpForce, -this.yv * this.game.bounce);
 
-      } else if (this.yv && ((this.yv - (this.yv * this.game.bounce)) > 20)) {
+      } else if (this.yv && ((this.yv - (this.yv * this.game.bounce)) > this.game.nullifyBounce)) {
         this.yv = -this.yv * this.game.bounce;
 
       } else {

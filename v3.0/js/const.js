@@ -11,7 +11,8 @@ const c = {
   maxSpeed:                  100,
   startSpeed:                40,
   jumpForce:                 150,
-  bounce:                     0.78,
+  bounce:                    0.78,
+  nullifyBounce:             20,
   gravity:                   3,
   hw:                        48,
   hh:                        48
