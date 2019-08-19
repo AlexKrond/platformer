@@ -138,6 +138,11 @@ class Game {
     [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => {
       gameObject.draw(ctx);
     });
+
+    ctx.fillStyle = "red";
+    ctx.font = "20px Arial";
+    // ctx.fillText(`Score: ${frameScore + bonusScore}`, 10, 25);
+    ctx.fillText(`Score: ${this.bonusScore}`, 10, 25);
   }
 }
 
