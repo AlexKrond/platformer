@@ -20,7 +20,7 @@ class Platform extends GameObject {
         color: "black"
       };
 
-      game.platforms.push(new Platform(props));
+      game.platforms.push(new Platform(props, game));
     }
   }
 }

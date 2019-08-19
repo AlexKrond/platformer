@@ -33,6 +33,12 @@ class GameObject {
     ctx.fillStyle = this.color;
     ctx.fillRect(this.x, this.y, this.w, this.h);
   }
+
+  markForDeletion() {
+    if (this.y > this.game.height + this.game.hero.h) {
+      this.markedForDeletion = true;
+    }
+  }
 }
 
 export default GameObject

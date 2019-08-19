@@ -64,7 +64,7 @@ class Game {
         w: 50,
         h: this.height + 1000,
         isMoving: false
-      }),
+      }, this),
 
       // Правая граница
       new Platform({
@@ -73,7 +73,7 @@ class Game {
         w: 50,
         h: this.height + 1000,
         isMoving: false
-      }),
+      }, this),
 
       // Начальная платформа для игрока
       new Platform({
@@ -82,7 +82,7 @@ class Game {
         w: 200,
         h: 30,
         color: "black"
-      })
+      }, this)
     ];
 
     for (let i = 0; i < (this.height / 200); i++) {
@@ -97,6 +97,7 @@ class Game {
   update(deltaTime) {
     this.frames++;
 
+    [...this.platforms, ...this.bonuses].forEach(gameObject => gameObject.markForDeletion());
     [...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => gameObject.update(deltaTime));
 
     this.platforms = this.platforms.filter(platform => !platform.markedForDeletion);
