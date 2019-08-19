@@ -51,6 +51,10 @@ class Hero extends GameObject {
           wasTopOrBottomCollision = true;
           this.y = platform.y - this.h;
           this.rebound(platform);
+
+          if (platform.y < this.game.height / 2) {
+            platform.isCrashed = true;
+          }
           break;
       }
     });
