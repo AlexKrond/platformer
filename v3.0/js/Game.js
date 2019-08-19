@@ -56,6 +56,26 @@ class Game {
 
   start() {
     this.platforms = [
+
+      // Левая граница
+      new Platform({
+        x: -50,
+        y: -500,
+        w: 50,
+        h: this.height + 1000,
+        isMoving: false
+      }),
+
+      // Правая граница
+      new Platform({
+        x: this.width,
+        y: -500,
+        w: 50,
+        h: this.height + 1000,
+        isMoving: false
+      }),
+
+      // Начальная платформа для игрока
       new Platform({
         x: this.width / 2 - 100,
         y: this.height - 100,
