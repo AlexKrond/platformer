@@ -14,7 +14,8 @@ class Game {
 
     this.screenMoveSpeed = c.screenMoveSpeed;
 
-    this.crashFrequency = c.crashFrequency;
+    this.crashPlatformFrequency = c.crashPlatformFrequency;
+    this.bonusSpawnFrequency = c.bonusSpawnFrequency;
     this.bound = c.bound;
     this.gravity = c.gravity;
 
@@ -115,6 +116,18 @@ class Game {
 
     if (this.frames % Math.floor(2500 / this.screenMoveSpeed) === 0) {
       Platform.spawnNew(this, -50);
+    }
+
+    if (Math.random() < this.bonusSpawnFrequency) {
+      this.bonuses.push(
+        new Bonus({
+          x: Math.random() * (this.width - this.hero.w),
+          y: Math.random() * (this.height/2 + 50) - 50,
+          w: 32,
+          h: 32,
+          color: "gold"
+        }, this)
+      );
     }
   }
 
