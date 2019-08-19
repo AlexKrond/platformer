@@ -17,6 +17,7 @@ class Game {
     this.bound = c.bound;
     this.gravity = c.gravity;
 
+    this.frames = 0;
     this.bonusScore = 0;
 
     Bonus.img.src = "sprites/bonus.png";
@@ -26,7 +27,6 @@ class Game {
       y: this.height - c.hh - 100,
       w: c.hw,
       h: c.hh,
-      yv: 0,
       color: "red"
     }, this);
 
@@ -75,10 +75,16 @@ class Game {
   }
 
   update(deltaTime) {
+    this.frames++;
+
     [...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => gameObject.update(deltaTime));
 
     this.platforms = this.platforms.filter(platform => !platform.markedForDelete);
     this.bonuses = this.bonuses.filter(bonus => !bonus.markedForDelete);
+
+    if (this.frames % Math.floor(2500 / this.screenMoveSpeed) === 0) {
+      Platform.spawnNew(this, -50);
+    }
   }
 
   draw(ctx) {
