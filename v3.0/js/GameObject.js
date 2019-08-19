@@ -3,7 +3,7 @@
 import c from "./const.js"
 
 class GameObject {
-  constructor({x, y, w, h, xv = 0, yv = 0, collides = true, isMoving = true, color = "white"}) {
+  constructor({x, y, w, h, xv = 0, yv = 0, collides = true, isMoving = true, color = "white"}, game) {
     this.x = x;
     this.y = y;
     this.w = w;
@@ -14,6 +14,8 @@ class GameObject {
     this.color = color;
     this.markedForDeletion = false;
     this.isMoving = isMoving;
+
+    this.game = game;
   }
 
   screenMoving(deltaTime) {

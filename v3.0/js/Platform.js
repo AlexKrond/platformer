@@ -3,8 +3,8 @@
 import GameObject from "./GameObject.js"
 
 class Platform extends GameObject {
-  constructor(props) {
-    super(props);
+  constructor(props, game) {
+    super(props, game);
   }
 
   static spawnNew(game, bottomLine) {

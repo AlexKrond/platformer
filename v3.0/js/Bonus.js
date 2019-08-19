@@ -7,8 +7,7 @@ class Bonus extends GameObject {
   static img = new Image();
 
   constructor(props, game) {
-    super(props);
-    this.game = game;
+    super(props, game);
   }
 
   update(deltaTime) {

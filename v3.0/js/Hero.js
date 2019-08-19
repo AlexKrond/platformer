@@ -11,13 +11,11 @@ class Hero extends GameObject {
   #jumpForce = c.jumpForce;
 
   constructor(props, game) {
-    super(props);
+    super(props, game);
 
     this.jump = props.jump || false;
     this.goLeft = props.goLeft || false;
     this.goRight = props.goRight || false;
-
-    this.game = game;
   }
 
   update(deltaTime) {
