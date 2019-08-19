@@ -13,8 +13,8 @@ const c = {
   jumpForce:                 150,
   bound:                     0.78,
   gravity:                   3,
-  hw:                        32,
-  hh:                        32
+  hw:                        48,
+  hh:                        48
 };
 
 export default c

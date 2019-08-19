@@ -10,6 +10,8 @@ class Hero extends GameObject {
   #maxSpeed = c.maxSpeed;
   #jumpForce = c.jumpForce;
 
+  static img = new Image();
+
   constructor(props, game) {
     super(props, game);
 
@@ -73,6 +75,10 @@ class Hero extends GameObject {
     } else {
       super.update(deltaTime);
     }
+  }
+
+  draw(ctx) {
+    ctx.drawImage(Hero.img, this.x, this.y, this.w, this.h);
   }
 
   moveLeft() {
