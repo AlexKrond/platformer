@@ -47,6 +47,8 @@ class Game {
       }, this)
     ];
 
+    this.crashedPlatforms = [];
+
     new InputHandler(this.hero);
 
 
