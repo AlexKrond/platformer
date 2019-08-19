@@ -1,0 +1,20 @@
+html, body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: black;
+}
+
+.container {
+  text-align: center;
+}
+
+.game {
+  border: 1px solid black;
+}
