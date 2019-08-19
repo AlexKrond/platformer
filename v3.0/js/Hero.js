@@ -18,6 +18,8 @@ class Hero extends GameObject {
     this.jump = props.jump || false;
     this.goLeft = props.goLeft || false;
     this.goRight = props.goRight || false;
+
+    this.lastBottomCollidePlatform = null;
   }
 
   update(deltaTime) {
@@ -51,12 +53,17 @@ class Hero extends GameObject {
 
         case "bottom":
           wasTopOrBottomCollision = true;
+
           this.y = platform.y - this.h;
           this.rebound(platform);
 
-          if (platform.y < this.game.height * 0.66 && Math.random() < this.game.crashPlatformFrequency) {
+          if (platform.y < this.game.height * 0.66 &&
+              Math.random() < this.game.crashPlatformFrequency &&
+              platform !== this.lastBottomCollidePlatform) {
             platform.isCrashed = true;
           }
+
+          this.lastBottomCollidePlatform = platform;
           break;
       }
     });

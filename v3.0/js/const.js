@@ -7,7 +7,7 @@ const c = {
   // bonusSpawnFrequency:       1,
   bonusSpawnFrequency:       0.007,
   // crashPlatformFrequency:    2,
-  crashPlatformFrequency:    0.3,
+  crashPlatformFrequency:    0.2,
   acceleration:              5,
   maxSpeed:                  100,
   startSpeed:                40,
