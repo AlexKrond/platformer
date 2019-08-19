@@ -54,7 +54,7 @@ class Hero extends GameObject {
           this.y = platform.y - this.h;
           this.rebound(platform);
 
-          if (platform.y < this.game.height / 2) {
+          if (platform.y < this.game.height * 0.66 && Math.random() < this.game.crashPlatformFrequency) {
             platform.isCrashed = true;
           }
           break;
