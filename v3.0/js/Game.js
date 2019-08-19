@@ -105,7 +105,7 @@ class Game {
       Platform.spawnNew(this, -50);
     }
 
-    if (Math.random() < this.bonusSpawnFrequency) {
+    if (Math.random() < this.bonusSpawnFrequency) { // TODO: привязаться к screenMoveSpeed
       this.bonuses.push(
         new Bonus({
           x: Math.random() * (this.width - this.hero.w),
