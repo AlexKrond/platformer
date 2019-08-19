@@ -91,21 +91,6 @@ class Game {
     for (let i = 0; i < (this.height / 200); i++) {
       Platform.spawnNew(this, i * 200 - 100);
     }
-
-
-    this.crashedPlatforms.push(
-        new CrashedPlatform({
-          x: 500,
-          y: 500,
-          w: 200,
-          h: 20,
-          yv: 50,
-          color: "gray",
-          collides: false
-        }, this)
-    );
-
-
   }
 
   screenMoving(deltaTime) {
