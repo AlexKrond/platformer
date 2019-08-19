@@ -1,10 +1,31 @@
 "use strict";
 
 import GameObject from "./GameObject.js"
+import CrashedPlatform from "./СrashedPlatform.js"
 
 class Platform extends GameObject {
   constructor(props, game) {
     super(props, game);
+    this.isCrashed = false;
+  }
+
+  update(deltaTime) {
+    super.update(deltaTime);
+
+    if (this.isCrashed) {
+      this.markedForDeletion = true;
+      this.game.crashedPlatforms.push(
+          new CrashedPlatform({
+            x: this.x,
+            y: this.y,
+            w: this.w,
+            h: this.h,
+            yv: 50,
+            color: "gray",
+            collides: false
+          }, this.game)
+      );
+    }
   }
 
   static spawnNew(game, bottomLine) {
