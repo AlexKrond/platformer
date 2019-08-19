@@ -5,6 +5,7 @@ import InputHandler from "./InputHandler.js"
 import Hero from "./Hero.js"
 import Bonus from "./Bonus.js"
 import Platform from "./Platform.js"
+import CrashedPlatform from "./СrashedPlatform.js"
 
 class Game {
   constructor() {
@@ -90,18 +91,40 @@ class Game {
     for (let i = 0; i < (this.height / 200); i++) {
       Platform.spawnNew(this, i * 200 - 100);
     }
+
+
+    this.crashedPlatforms.push(
+        new CrashedPlatform({
+          x: 500,
+          y: 500,
+          w: 200,
+          h: 20,
+          yv: 50,
+          color: "gray",
+          collides: false
+        }, this)
+    );
+
+
   }
 
   screenMoving(deltaTime) {
-    [...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => gameObject.screenMoving(deltaTime));
+    [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => {
+      gameObject.screenMoving(deltaTime);
+    });
   }
 
   update(deltaTime) {
     this.frames++;
 
-    [...this.platforms, ...this.bonuses].forEach(gameObject => gameObject.markForDeletion());
-    [...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => gameObject.update(deltaTime));
+    [...this.crashedPlatforms, ...this.platforms, ...this.bonuses].forEach(gameObject => {
+      gameObject.markForDeletion();
+    });
+    [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => {
+      gameObject.update(deltaTime);
+    });
 
+    this.crashedPlatforms = this.crashedPlatforms.filter(crashedPlatform => !crashedPlatform.markedForDeletion);
     this.platforms = this.platforms.filter(platform => !platform.markedForDeletion);
     this.bonuses = this.bonuses.filter(bonus => !bonus.markedForDeletion);
 
@@ -114,7 +137,9 @@ class Game {
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, this.width, this.height);
 
-    [...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => gameObject.draw(ctx));
+    [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => {
+      gameObject.draw(ctx);
+    });
   }
 }
 

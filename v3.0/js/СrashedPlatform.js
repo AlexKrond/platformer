@@ -10,22 +10,24 @@ class CrashedPlatform extends GameObject {
   draw(ctx) {
     const angle = 35;
 
-    context.fillStyle = "gray";
+    ctx.fillStyle = this.color;
 
-    context.save();
-    context.translate(this.x, this.y);
+    ctx.save();
+    ctx.translate(this.x, this.y);
 
-    context.rotate(angle * Math.PI / 180);
+    ctx.rotate(angle * Math.PI / 180);
 
-    context.fillRect(0, 0, this.w / 2, this.h);
+    ctx.fillRect(0, 0, this.w / 2, this.h);
 
-    context.restore();
-    context.save();
-    context.translate(this.x + this.w, this.y);
+    ctx.restore();
+    ctx.save();
+    ctx.translate(this.x + this.w, this.y);
 
-    context.rotate((90 - angle) * Math.PI / 180);
-    context.fillRect(0, 0, this.h, this.w / 2);
+    ctx.rotate((90 - angle) * Math.PI / 180);
+    ctx.fillRect(0, 0, this.h, this.w / 2);
 
-    context.restore();
+    ctx.restore();
   }
 }
+
+export default CrashedPlatform
