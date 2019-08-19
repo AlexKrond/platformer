@@ -104,10 +104,10 @@ class Hero extends GameObject {
   rebound(platform) {
     if ((this.y + this.h) >= platform.y) {
       if (this.jump) {
-        this.yv = Math.min(-this.#jumpForce, -this.yv * this.game.bound);
+        this.yv = Math.min(-this.#jumpForce, -this.yv * this.game.bounce);
 
-      } else if (this.yv && ((this.yv - (this.yv * this.game.bound)) > 20)) {
-        this.yv = -this.yv * this.game.bound;
+      } else if (this.yv && ((this.yv - (this.yv * this.game.bounce)) > 20)) {
+        this.yv = -this.yv * this.game.bounce;
 
       } else {
         this.yv = 0;

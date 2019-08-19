@@ -16,7 +16,7 @@ class Game {
 
     this.crashPlatformFrequency = c.crashPlatformFrequency;
     this.bonusSpawnFrequency = c.bonusSpawnFrequency;
-    this.bound = c.bound;
+    this.bound = c.bounce;
     this.gravity = c.gravity;
 
     this.frames = 0; // TODO: отвязаться от фреймов, привязаться к something += CONST / deltaTime
