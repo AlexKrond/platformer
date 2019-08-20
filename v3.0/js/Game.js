@@ -31,7 +31,8 @@ class Game {
       y: this.height - c.hh - 100,
       w: c.hw,
       h: c.hh,
-      color: "red"
+      color: "red",
+      gravityIsUsed: true
     }, this);
 
     this.bonuses = [];
@@ -85,6 +86,12 @@ class Game {
     });
   }
 
+  gravityEffect(deltaTime) {
+    [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => {
+      gameObject.gravityEffect(deltaTime);
+    });
+  }
+
   update(deltaTime) {
     this.frames++;
 
@@ -105,13 +112,14 @@ class Game {
 
     if (Math.random() < this.bonusSpawnFrequency) { // TODO: привязаться к screenMoveSpeed
       this.bonuses.push(
-        new Bonus({
-          x: Math.random() * (this.width - this.hero.w),
-          y: Math.random() * (this.height/2 + 50) - 50,
-          w: 32,
-          h: 32,
-          color: "gold"
-        }, this)
+          new Bonus({
+            x: Math.random() * (this.width - this.hero.w),
+            y: Math.random() * (this.height / 2 + 50) - 50,
+            w: 32,
+            h: 32,
+            color: "gold",
+            gravityIsUsed: true
+          }, this)
       );
     }
   }
