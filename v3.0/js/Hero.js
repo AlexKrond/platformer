@@ -3,6 +3,7 @@
 import c from "./const.js"
 import detectCollision from "./detectCollision.js"
 import GameObject from "./GameObject.js"
+import Sprite from "./Sprite.js"
 
 class Hero extends GameObject {
   #acceleration = c.acceleration;
@@ -20,6 +21,8 @@ class Hero extends GameObject {
     this.goRight = props.goRight || false;
 
     this.lastBottomCollidePlatform = null;
+
+    this.sprite = new Sprite({frameWidth: 200, frameHeight: 200}, this);
   }
 
   update(deltaTime) {
@@ -82,10 +85,13 @@ class Hero extends GameObject {
     } else {
       super.update(deltaTime);
     }
+
+    this.sprite.update(deltaTime);
   }
 
   draw(ctx) {
-    ctx.drawImage(Hero.img, this.x, this.y, this.w, this.h);
+    // ctx.drawImage(Hero.img, this.x, this.y, this.w, this.h);
+    this.sprite.draw(ctx);
   }
 
   moveLeft() {

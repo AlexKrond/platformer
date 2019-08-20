@@ -23,7 +23,7 @@ class Game {
     this.frames = 0; // TODO: отвязаться от фреймов, привязаться к something += CONST / deltaTime
     this.bonusScore = 0;
 
-    Hero.img.src = "sprites/lama4.png";
+    Hero.img.src = "sprites/lama-spritesheet.png";
     Bonus.img.src = "sprites/bonus.png";
 
     this.hero = new Hero({
