@@ -7,11 +7,6 @@ class CrashedPlatform extends GameObject {
     super(props, game);
   }
 
-  update(deltaTime) {
-    this.gravityEffect(deltaTime);
-    super.update(deltaTime);
-  }
-
   draw(ctx) {
     const angle = 35;
 

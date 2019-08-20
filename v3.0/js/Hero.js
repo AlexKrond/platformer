@@ -39,8 +39,6 @@ class Hero extends GameObject {
         this.stopping(deltaTime);
     }
 
-    this.gravityEffect(deltaTime);
-
     let wasTopOrBottomCollision = false;
     this.game.platforms.forEach(platform => {
       const collideSide = detectCollision(this, platform, deltaTime);

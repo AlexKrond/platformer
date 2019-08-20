@@ -19,6 +19,7 @@ function gameLoop(timeStamp) {
   lastTime = timeStamp;
 
   game.screenMoving(deltaTime);
+  game.gravityEffect(deltaTime);
   game.update(deltaTime);
   game.draw(ctx);
 

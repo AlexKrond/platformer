@@ -11,8 +11,6 @@ class Bonus extends GameObject {
   }
 
   update(deltaTime) {
-    this.gravityEffect(deltaTime);
-
     let wasBottomCollision = false;
     this.game.platforms.forEach(platform => {
       const collideSide = detectCollision(this, platform, deltaTime);

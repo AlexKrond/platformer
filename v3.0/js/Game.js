@@ -86,6 +86,12 @@ class Game {
     });
   }
 
+  gravityEffect(deltaTime) {
+    [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => {
+      gameObject.gravityEffect(deltaTime);
+    });
+  }
+
   update(deltaTime) {
     this.frames++;
 
