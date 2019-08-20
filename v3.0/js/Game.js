@@ -20,7 +20,9 @@ class Game {
     this.nullifyBounce = c.nullifyBounce;
     this.gravity = c.gravity;
 
-    this.frames = 0; // TODO: отвязаться от фреймов, привязаться к something += CONST / deltaTime
+    this.totalDistance = 0;
+    this.lastSpawnPlatformDist = 0;
+    // this.distanceScore = 0;
     this.bonusScore = 0;
 
     Hero.img.src = "sprites/lama-spritesheet.png";
@@ -93,7 +95,7 @@ class Game {
   }
 
   update(deltaTime) {
-    this.frames++;
+    this.totalDistance += this.screenMoveSpeed * deltaTime;
 
     [...this.crashedPlatforms, ...this.platforms, ...this.bonuses].forEach(gameObject => {
       gameObject.markForDeletion();
@@ -106,11 +108,12 @@ class Game {
     this.platforms = this.platforms.filter(platform => !platform.markedForDeletion);
     this.bonuses = this.bonuses.filter(bonus => !bonus.markedForDeletion);
 
-    if (this.frames % Math.floor(2500 / this.screenMoveSpeed) === 0) {
+    if (this.totalDistance > this.lastSpawnPlatformDist + 200) { // TODO: 200 вынести в константы или завязать на разброс в спавне
       Platform.spawnNew(this, -50);
+      this.lastSpawnPlatformDist += 200;
     }
 
-    if (Math.random() < this.bonusSpawnFrequency) { // TODO: привязаться к screenMoveSpeed
+    if (Math.random() < this.bonusSpawnFrequency) {
       this.bonuses.push(
           new Bonus({
             x: Math.random() * (this.width - this.hero.w),
