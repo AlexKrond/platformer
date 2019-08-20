@@ -10,6 +10,8 @@ class Hero extends GameObject {
   #startSpeed = c.startSpeed;
   #maxSpeed = c.maxSpeed;
   #jumpForce = c.jumpForce;
+  #horizontalBraking = c.horizontalBraking;
+  #nullifyHorizontalSpeed = c.nullifyHorizontalSpeed;
 
   static img = new Image();
 
@@ -117,8 +119,8 @@ class Hero extends GameObject {
     if (this.xv >= 0) {
       if (this.xv >= this.#startSpeed) {
 
-        if (this.xv > this.#startSpeed) {
-          this.xv = this.#startSpeed;
+        if (this.xv > this.#maxSpeed) {
+          this.xv = this.#maxSpeed;
         } else {
           this.xv = this.xv + this.#acceleration * deltaTime;
         }
@@ -133,7 +135,11 @@ class Hero extends GameObject {
   }
 
   stopping(deltaTime) {
-    this.xv = (this.xv < 10 && this.xv > -10) ? 0 : this.xv + (-this.xv * 2 * deltaTime);
+    if (this.xv < this.#nullifyHorizontalSpeed && this.xv > -this.#nullifyHorizontalSpeed) {
+      this.xv = 0;
+    } else {
+      this.xv = this.xv + (-this.xv * this.#horizontalBraking * deltaTime);
+    }
   }
 
   rebound(platform) {
