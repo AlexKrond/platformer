@@ -22,7 +22,7 @@ class Game {
 
     this.totalDistance = 0;
     this.lastSpawnPlatformDist = 0;
-    // this.distanceScore = 0;
+    this.distanceScore = 0;
     this.bonusScore = 0;
 
     Hero.img.src = "sprites/lama-spritesheet.png";
@@ -96,6 +96,8 @@ class Game {
 
   update(deltaTime) {
     this.totalDistance += this.screenMoveSpeed * deltaTime;
+    // this.distanceScore = Math.floor(this.totalDistance / 2);   // Как половина пройденного расстояния
+    this.distanceScore += 5 * deltaTime;                          // Как 5 очков в секунду
 
     [...this.crashedPlatforms, ...this.platforms, ...this.bonuses].forEach(gameObject => {
       gameObject.markForDeletion();
@@ -138,7 +140,7 @@ class Game {
     ctx.fillStyle = "red";
     ctx.font = "20px Arial";
     // ctx.fillText(`Score: ${frameScore + bonusScore}`, 10, 25);
-    ctx.fillText(`Score: ${this.bonusScore}`, 10, 25);
+    ctx.fillText(`Score: ${Math.floor(this.distanceScore) + this.bonusScore}`, 10, 25);
   }
 }
 
