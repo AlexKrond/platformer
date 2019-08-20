@@ -20,13 +20,13 @@ class GameObject {
 
   screenMoving(deltaTime) {
     if (this.isMoving) {
-      this.y += c.screenMoveSpeed / deltaTime;
+      this.y += c.screenMoveSpeed * deltaTime;
     }
   }
 
   update(deltaTime) {
-    this.x += this.xv / deltaTime;
-    this.y += this.yv / deltaTime;
+    this.x += this.xv * deltaTime;
+    this.y += this.yv * deltaTime;
   }
 
   draw(ctx) {

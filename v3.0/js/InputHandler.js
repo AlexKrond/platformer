@@ -19,9 +19,6 @@ class InputHandler {
           gameObject.jump = true;
           break;
       }
-      // if (event.code === "KeyW" || event.code === "ArrowUp") {
-      //   gameObject.jump = true;
-      // }
     });
 
     // Отпускание клавиши
