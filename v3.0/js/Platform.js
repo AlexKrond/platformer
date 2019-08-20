@@ -20,9 +20,9 @@ class Platform extends GameObject {
             y: this.y,
             w: this.w,
             h: this.h,
-            yv: 50,                       // TODO: перейти на гравитацию и вынести её в gameObject, добавить свойтво влияния гравитации.
             color: "gray",
-            collides: false
+            collides: false,
+            gravityIsUsed: true
           }, this.game)
       );
     }

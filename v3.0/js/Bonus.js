@@ -11,7 +11,7 @@ class Bonus extends GameObject {
   }
 
   update(deltaTime) {
-    this.yv = this.yv ? (this.yv + this.game.gravity * deltaTime) : this.game.gravity * deltaTime;
+    this.gravityEffect(deltaTime);
 
     let wasBottomCollision = false;
     this.game.platforms.forEach(platform => {
