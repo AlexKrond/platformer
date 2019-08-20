@@ -28,16 +28,16 @@ class Hero extends GameObject {
   update(deltaTime) {
     switch (true) {
       case this.goLeft:
-        this.moveLeft();
+        this.moveLeft(deltaTime);
         break;
       case this.goRight:
-        this.moveRight();
+        this.moveRight(deltaTime);
         break;
       default:
-        this.stopping();
+        this.stopping(deltaTime);
     }
 
-    this.yv = this.yv ? (this.yv + this.game.gravity) : this.game.gravity;
+    this.yv = this.yv ? (this.yv + this.game.gravity * deltaTime) : this.game.gravity * deltaTime;
 
     let wasTopOrBottomCollision = false;
     this.game.platforms.forEach(platform => {
@@ -81,7 +81,7 @@ class Hero extends GameObject {
     });
 
     if (wasTopOrBottomCollision) {
-      this.x += this.xv / deltaTime;
+      this.x += this.xv * deltaTime;
     } else {
       super.update(deltaTime);
     }
@@ -94,24 +94,46 @@ class Hero extends GameObject {
     this.sprite.draw(ctx);
   }
 
-  moveLeft() {
+  moveLeft(deltaTime) {
     if (this.xv <= 0) {
-      this.xv = this.xv ? (this.xv < -this.#maxSpeed) ? this.xv : (this.xv - this.#acceleration) : -this.#startSpeed;
+      if (this.xv <= -this.#startSpeed) {
+
+        if (this.xv < -this.#maxSpeed) {
+          this.xv = -this.#maxSpeed;
+        } else {
+          this.xv = this.xv - this.#acceleration * deltaTime;
+        }
+
+      } else {
+        this.xv = -this.#startSpeed;
+      }
+
     } else {
-      this.stopping();
+      this.stopping(deltaTime);
     }
   }
 
-  moveRight() {
+  moveRight(deltaTime) {
     if (this.xv >= 0) {
-      this.xv = this.xv ? (this.xv > this.#maxSpeed) ? this.xv : (this.xv + this.#acceleration) : this.#startSpeed;
+      if (this.xv >= this.#startSpeed) {
+
+        if (this.xv > this.#startSpeed) {
+          this.xv = this.#startSpeed;
+        } else {
+          this.xv = this.xv + this.#acceleration * deltaTime;
+        }
+
+      } else {
+        this.xv = this.#startSpeed;
+      }
+
     } else {
-      this.stopping();
+      this.stopping(deltaTime);
     }
   }
 
-  stopping() {
-    this.xv = (this.xv < 10 && this.xv > -10) ? 0 : this.xv + (-this.xv * 0.2);
+  stopping(deltaTime) {
+    this.xv = (this.xv < 10 && this.xv > -10) ? 0 : this.xv + (-this.xv * 2 * deltaTime);
   }
 
   rebound(platform) {

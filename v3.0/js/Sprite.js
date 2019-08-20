@@ -67,7 +67,7 @@ class Sprite {
       this.currentIndex = this.currentState[0];
     }
 
-    this.currentIndex += Math.abs(this.gameObject.xv * 0.1) / deltaTime;
+    this.currentIndex += Math.abs(this.gameObject.xv) * 0.3 * deltaTime;
     if (this.currentState &&
         this.currentIndex >= this.currentState[this.currentState.length - 1] + 1) {
       this.currentIndex = this.currentState[0];

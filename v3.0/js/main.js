@@ -15,7 +15,7 @@ game.start();
 let lastTime = 0;
 
 function gameLoop(timeStamp) {
-  const deltaTime = timeStamp - lastTime;
+  const deltaTime = (timeStamp - lastTime) / 1000;
   lastTime = timeStamp;
 
   game.screenMoving(deltaTime);

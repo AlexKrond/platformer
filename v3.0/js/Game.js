@@ -39,10 +39,6 @@ class Game {
     this.crashedPlatforms = [];
 
     new InputHandler(this.hero);
-
-
-    // console.log(this.hero);
-    // console.log(this.bonus);
   }
 
   start() {
@@ -68,9 +64,11 @@ class Game {
 
       // Начальная платформа для игрока
       new Platform({
-        x: this.width / 2 - 100,
+        // x: this.width / 2 - 100,
+        x: 0,
         y: this.height - 100,
-        w: 200,
+        // w: 200,
+        w: this.width,
         h: 30,
         color: "black"
       }, this)
