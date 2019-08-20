@@ -38,14 +38,14 @@ class Game {
     }, this);
 
     this.bonuses = [];
-
+    this.platforms = [];
     this.crashedPlatforms = [];
 
     new InputHandler(this.hero);
   }
 
   start() {
-    this.platforms = [
+    this.platforms.push(
 
       // Левая граница
       new Platform({
@@ -75,7 +75,7 @@ class Game {
         h: 30,
         color: "black"
       }, this)
-    ];
+    );
 
     for (let i = 0; i < (this.height / 200); i++) {
       Platform.spawnNew(this, i * 200 - 100);
@@ -115,7 +115,7 @@ class Game {
       this.lastSpawnPlatformDist += 200;
     }
 
-    if (Math.random() < this.bonusSpawnFrequency) {
+    if (Math.random() < this.bonusSpawnFrequency) { // TODO: привязать к deltaTime, чтобы спавн был одинаков при разных FPS
       this.bonuses.push(
           new Bonus({
             x: Math.random() * (this.width - this.hero.w),
@@ -139,7 +139,6 @@ class Game {
 
     ctx.fillStyle = "red";
     ctx.font = "20px Arial";
-    // ctx.fillText(`Score: ${frameScore + bonusScore}`, 10, 25);
     ctx.fillText(`Score: ${Math.floor(this.distanceScore) + this.bonusScore}`, 10, 25);
   }
 }
