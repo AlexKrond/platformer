@@ -9,6 +9,14 @@ import CrashedPlatform from "./СrashedPlatform.js"
 
 class Game {
   constructor() {
+    this.gameStates = {
+      START: 0,
+      RUN: 1,
+      PAUSE: 2,
+      GAMEOVER: 3
+    };
+    this.currentGameState = this.gameStates.START;
+
     this.width = c.gameWidth;
     this.height = c.gameHeight;
 
