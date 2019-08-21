@@ -14,7 +14,8 @@ class Game {
       START: 0,
       RUN: 1,
       PAUSE: 2,
-      GAMEOVER: 3
+      DEATH: 3,
+      GAMEOVER: 4
     };
     this.currentGameState = null;
 
@@ -33,6 +34,8 @@ class Game {
     this.lastSpawnPlatformDist = 0;
     this.distanceScore = 0;
     this.bonusScore = 0;
+
+    this.lives = 3;
 
     this.liveImg = new Image();
     this.deathImg = new Image();
@@ -128,7 +131,8 @@ class Game {
     this.bonuses = this.bonuses.filter(bonus => !bonus.markedForDeletion);
 
     if (this.hero.markedForDeletion) {
-      this.currentGameState = this.gameStates.GAMEOVER;
+      this.lives--;
+      this.currentGameState = this.gameStates.DEATH;
     }
 
     if (this.totalDistance > this.lastSpawnPlatformDist + 200) { // TODO: 200 вынести в константы или завязать на разброс в спавне
