@@ -40,7 +40,7 @@ class Sprite {
           this.currentState[0];
     }
 
-    if (this.gameObject.xv === 0) {
+    if (this.gameObject.xv === 0 || this.gameObject.yv !== 0) {
       if (this.currentState === this.states.moveLeft ||
           this.currentState === this.states.jumpLeft ||
           this.currentState === this.states.standLeft) {
@@ -57,9 +57,9 @@ class Sprite {
     }
 
     if (wasBottomCollision) this.afterBottomCollisionCounter = 0;
-    this.afterBottomCollisionCounter++;
+    this.afterBottomCollisionCounter += 1000 * deltaTime;
 
-    if (!wasBottomCollision && this.afterBottomCollisionCounter > 10) {
+    if (!wasBottomCollision && this.afterBottomCollisionCounter > 200) {
       if (this.currentState === this.states.moveLeft || this.currentState === this.states.standLeft) {
         this.currentState = this.states.jumpLeft;
       }
