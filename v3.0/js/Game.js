@@ -34,6 +34,11 @@ class Game {
     this.distanceScore = 0;
     this.bonusScore = 0;
 
+    this.liveImg = new Image();
+    this.deathImg = new Image();
+    this.liveImg.src = "sprites/live.png";
+    this.deathImg.src = "sprites/death.png";
+
     Hero.img.src = "sprites/lama-spritesheet.png";
     Bonus.img.src = "sprites/bonus.png";
 
@@ -158,6 +163,7 @@ class Game {
     ctx.textAlign = "left";
     ctx.fillText(`Score: ${Math.floor(this.distanceScore) + this.bonusScore}`, 10, 25);
 
+    this.drawLives(ctx);
 
     switch (this.currentGameState) {
       case this.gameStates.START:
@@ -172,6 +178,12 @@ class Game {
         this.drawGameOver(ctx);
         break;
     }
+  }
+
+  drawLives(ctx) {
+    ctx.drawImage(this.liveImg, this.width - 100, 10, 24, 24);
+    ctx.drawImage(this.liveImg, this.width - 70, 10, 24, 24);
+    ctx.drawImage(this.deathImg, this.width - 40, 10, 24, 24);
   }
 
   drawPause(ctx) {
