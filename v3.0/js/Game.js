@@ -94,18 +94,6 @@ class Game {
     this.currentGameState = this.gameStates.START;
   }
 
-  screenMoving(deltaTime) {
-    [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => {
-      gameObject.screenMoving(deltaTime);
-    });
-  }
-
-  gravityEffect(deltaTime) {
-    [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => {
-      gameObject.gravityEffect(deltaTime);
-    });
-  }
-
   update(deltaTime) {
     this.totalDistance += this.screenMoveSpeed * deltaTime;
     // this.distanceScore = Math.floor(this.totalDistance / 2);   // Как половина пройденного расстояния
@@ -113,6 +101,12 @@ class Game {
 
     [...this.crashedPlatforms, ...this.platforms, ...this.bonuses].forEach(gameObject => {
       gameObject.markForDeletion();
+    });
+    [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => {
+      gameObject.screenMoving(deltaTime);
+    });
+    [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => {
+      gameObject.gravityEffect(deltaTime);
     });
     [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => {
       gameObject.update(deltaTime);
