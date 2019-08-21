@@ -156,6 +156,10 @@ class Game {
     if (this.currentGameState === this.gameStates.PAUSE) {
       this.drawPause(ctx);
     }
+
+    if (this.currentGameState === this.gameStates.START) {
+      this.drawStart(ctx);
+    }
   }
 
   drawPause(ctx) {
@@ -168,7 +172,17 @@ class Game {
     ctx.fillText("PAUSE", this.width / 2, this.height / 2);
 
     ctx.font = "20px Arial";
-    ctx.fillText("Press SPACEBAR to resume", this.width / 2, this.height / 1.3);
+    ctx.fillText("Press SPACEBAR to RESUME", this.width / 2, this.height / 1.3);
+  }
+
+  drawStart(ctx) {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    ctx.fillRect(0, 0, this.width, this.height);
+
+    ctx.fillStyle = "white";
+    ctx.font = "50px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("Press SPACEBAR to START", this.width / 2, this.height / 2);
   }
 }
 
