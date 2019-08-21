@@ -95,6 +95,12 @@ class Game {
   }
 
   update(deltaTime) {
+    if (this.currentGameState === this.gameStates.START ||
+        this.currentGameState === this.gameStates.PAUSE ||
+        this.currentGameState === this.gameStates.GAMEOVER) {
+      return;
+    }
+
     this.totalDistance += this.screenMoveSpeed * deltaTime;
     // this.distanceScore = Math.floor(this.totalDistance / 2);   // Как половина пройденного расстояния
     this.distanceScore += 5 * deltaTime;                          // Как 5 очков в секунду
