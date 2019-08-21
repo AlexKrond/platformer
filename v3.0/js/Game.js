@@ -2,6 +2,7 @@
 
 import c from "./const.js"
 import InputHandler from "./InputHandler.js"
+import InputHandlerGameState from "./InputHandlerGameState.js"
 import Hero from "./Hero.js"
 import Bonus from "./Bonus.js"
 import Platform from "./Platform.js"
@@ -49,6 +50,7 @@ class Game {
     this.platforms = [];
     this.crashedPlatforms = [];
 
+    new InputHandlerGameState(this);
     new InputHandler(this.hero);
   }
 
