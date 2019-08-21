@@ -62,6 +62,7 @@ class Game {
     this.hero.x = this.width / 2 - c.hw / 2;
     this.hero.y = this.height - c.hh - 100;
     this.hero.markedForDeletion = false;
+    this.hero.jump = false;
 
     if (this.currentGameState === this.gameStates.GAMEOVER) {
       this.lives = 3;
@@ -96,11 +97,9 @@ class Game {
 
       // Начальная платформа для игрока
       new Platform({
-        // x: this.width / 2 - 100,
-        x: 0,
+        x: this.width / 2 - 100,
         y: this.height - 100,
-        // w: 200,
-        w: this.width,
+        w: 200,
         h: 30,
         color: "black"
       }, this)
