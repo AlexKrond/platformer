@@ -105,7 +105,7 @@ class Game {
     // this.distanceScore = Math.floor(this.totalDistance / 2);   // Как половина пройденного расстояния
     this.distanceScore += 5 * deltaTime;                          // Как 5 очков в секунду
 
-    [...this.crashedPlatforms, ...this.platforms, ...this.bonuses].forEach(gameObject => {
+    [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => {
       gameObject.markForDeletion();
     });
     [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => {
@@ -121,6 +121,10 @@ class Game {
     this.crashedPlatforms = this.crashedPlatforms.filter(crashedPlatform => !crashedPlatform.markedForDeletion);
     this.platforms = this.platforms.filter(platform => !platform.markedForDeletion);
     this.bonuses = this.bonuses.filter(bonus => !bonus.markedForDeletion);
+
+    if (this.hero.markedForDeletion) {
+      this.currentGameState = this.gameStates.GAMEOVER;
+    }
 
     if (this.totalDistance > this.lastSpawnPlatformDist + 200) { // TODO: 200 вынести в константы или завязать на разброс в спавне
       Platform.spawnNew(this, -50);
@@ -151,6 +155,7 @@ class Game {
 
     ctx.fillStyle = "red";
     ctx.font = "20px Arial";
+    ctx.textAlign = "left";
     ctx.fillText(`Score: ${Math.floor(this.distanceScore) + this.bonusScore}`, 10, 25);
 
     if (this.currentGameState === this.gameStates.PAUSE) {
