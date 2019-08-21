@@ -105,7 +105,7 @@ class Game {
     // this.distanceScore = Math.floor(this.totalDistance / 2);   // Как половина пройденного расстояния
     this.distanceScore += 5 * deltaTime;                          // Как 5 очков в секунду
 
-    [...this.crashedPlatforms, ...this.platforms, ...this.bonuses].forEach(gameObject => {
+    [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => {
       gameObject.markForDeletion();
     });
     [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => {
@@ -121,6 +121,10 @@ class Game {
     this.crashedPlatforms = this.crashedPlatforms.filter(crashedPlatform => !crashedPlatform.markedForDeletion);
     this.platforms = this.platforms.filter(platform => !platform.markedForDeletion);
     this.bonuses = this.bonuses.filter(bonus => !bonus.markedForDeletion);
+
+    if (this.hero.markedForDeletion) {
+      this.currentGameState = this.gameStates.GAMEOVER;
+    }
 
     if (this.totalDistance > this.lastSpawnPlatformDist + 200) { // TODO: 200 вынести в константы или завязать на разброс в спавне
       Platform.spawnNew(this, -50);
@@ -151,14 +155,22 @@ class Game {
 
     ctx.fillStyle = "red";
     ctx.font = "20px Arial";
+    ctx.textAlign = "left";
     ctx.fillText(`Score: ${Math.floor(this.distanceScore) + this.bonusScore}`, 10, 25);
 
-    if (this.currentGameState === this.gameStates.PAUSE) {
-      this.drawPause(ctx);
-    }
 
-    if (this.currentGameState === this.gameStates.START) {
-      this.drawStart(ctx);
+    switch (this.currentGameState) {
+      case this.gameStates.START:
+        this.drawStart(ctx);
+        break;
+
+      case this.gameStates.PAUSE:
+        this.drawPause(ctx);
+        break;
+
+      case this.gameStates.GAMEOVER:
+        this.drawGameOver(ctx);
+        break;
     }
   }
 
@@ -172,7 +184,7 @@ class Game {
     ctx.fillText("PAUSE", this.width / 2, this.height / 2);
 
     ctx.font = "20px Arial";
-    ctx.fillText("Press SPACEBAR to RESUME", this.width / 2, this.height / 1.3);
+    ctx.fillText("Press SPACEBAR to RESUME", this.width / 2, this.height / 1.6);
   }
 
   drawStart(ctx) {
@@ -183,6 +195,30 @@ class Game {
     ctx.font = "50px Arial";
     ctx.textAlign = "center";
     ctx.fillText("Press SPACEBAR to START", this.width / 2, this.height / 2);
+  }
+
+  drawGameOver(ctx) {
+    const score = Math.floor(this.distanceScore) + this.bonusScore;
+    const highScore = localStorage.highscore || 0;
+    if (score > highScore) {
+      localStorage.setItem("highscore", score);
+    }
+
+    ctx.fillStyle = "rgba(0, 0, 0, 1)";
+    ctx.fillRect(0, 0, this.width, this.height);
+
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+
+    ctx.font = "100px Arial";
+    ctx.fillText("GAMEOVER", this.width / 2, this.height / 2);
+    ctx.fillText(`Your score: ${score}`, this.width / 2, this.height / 2 + 150);
+
+    ctx.font = "50px Arial";
+    ctx.fillText(`Highscore: ${localStorage.highscore}`, this.width / 2, this.height / 2 - 200);
+
+    ctx.font = "20px Arial";
+    ctx.fillText("Press SPACEBAR to RESTART", this.width / 2, this.height / 1.1);
   }
 }
 

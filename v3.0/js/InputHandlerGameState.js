@@ -14,6 +14,10 @@ class InputHandlerGameState {
           case game.gameStates.PAUSE:
             game.currentGameState = game.gameStates.RUN;
             break;
+
+          case game.gameStates.GAMEOVER:
+            window.location.reload();
+            break;
         }
       }
     });
