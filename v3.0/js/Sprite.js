@@ -19,9 +19,11 @@ class Sprite {
 
     this.currentState = this.states.standRight;
     this.currentIndex = this.currentState[0];
+
+    this.afterBottomCollisionCounter = 0;
   }
 
-  update(deltaTime) {
+  update(deltaTime, wasBottomCollision) {
     if (this.gameObject.xv < 0) {
       this.currentState = this.states.moveLeft;
       this.currentIndex = (this.currentIndex >= this.currentState[0] &&
@@ -38,7 +40,7 @@ class Sprite {
           this.currentState[0];
     }
 
-    if (this.gameObject.xv === 0) {
+    if (this.gameObject.xv === 0 || this.gameObject.yv !== 0) {
       if (this.currentState === this.states.moveLeft ||
           this.currentState === this.states.jumpLeft ||
           this.currentState === this.states.standLeft) {
@@ -54,7 +56,10 @@ class Sprite {
       this.currentIndex = this.currentState[0];
     }
 
-    if (this.gameObject.yv > 10) {
+    if (wasBottomCollision) this.afterBottomCollisionCounter = 0;
+    this.afterBottomCollisionCounter += 1000 * deltaTime;
+
+    if (!wasBottomCollision && this.afterBottomCollisionCounter > 200) {
       if (this.currentState === this.states.moveLeft || this.currentState === this.states.standLeft) {
         this.currentState = this.states.jumpLeft;
       }
