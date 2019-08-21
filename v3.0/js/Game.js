@@ -61,8 +61,9 @@ class Game {
   start() {
     this.hero.x = this.width / 2 - c.hw / 2;
     this.hero.y = this.height - c.hh - 100;
+    this.hero.xv = 0;
+    this.hero.yv = 0;
     this.hero.markedForDeletion = false;
-    this.hero.jump = false;
 
     if (this.currentGameState === this.gameStates.GAMEOVER) {
       this.lives = 3;
