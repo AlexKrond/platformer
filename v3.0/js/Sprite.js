@@ -8,18 +8,17 @@ class Sprite {
     this.frameWidth = props.frameWidth;
     this.frameHeight = props.frameHeight;
 
-    this.currentIndex = 0;
-
     this.states = {
-      moveRight: [0, 1],
-      standRight: [2],
-      jumpRight: [3],
-      jumpLeft: [4],
-      standLeft: [5],
-      moveLeft: [5, 6, 7, 8]
+      moveRight: [1, 2, 3, 4, 5],
+      standRight: [1],
+      jumpRight: [0],
+      jumpLeft: [6],
+      standLeft: [7],
+      moveLeft: [7, 8, 9, 10, 11]
     };
 
     this.currentState = this.states.standRight;
+    this.currentIndex = this.currentState[0];
   }
 
   update(deltaTime) {
@@ -67,7 +66,7 @@ class Sprite {
       this.currentIndex = this.currentState[0];
     }
 
-    this.currentIndex += Math.abs(this.gameObject.xv) * 0.3 * deltaTime;
+    this.currentIndex += Math.abs(this.gameObject.xv) * 0.1 * deltaTime;
     if (this.currentState &&
         this.currentIndex >= this.currentState[this.currentState.length - 1] + 1) {
       this.currentIndex = this.currentState[0];
