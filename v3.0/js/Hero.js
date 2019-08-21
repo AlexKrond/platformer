@@ -39,7 +39,8 @@ class Hero extends GameObject {
         this.stopping(deltaTime);
     }
 
-    let wasTopOrBottomCollision = false;
+    let wasTopCollision = false;
+    let wasBottomCollision = false;
     this.game.platforms.forEach(platform => {
       const collideSide = detectCollision(this, platform, deltaTime);
 
@@ -49,13 +50,13 @@ class Hero extends GameObject {
           break;
 
         case "top":
-          wasTopOrBottomCollision = true;
+          wasTopCollision = true;
           this.y = platform.y + platform.h;
           this.yv = 0;
           break;
 
         case "bottom":
-          wasTopOrBottomCollision = true;
+          wasBottomCollision = true;
 
           this.y = platform.y - this.h;
           this.rebound(platform);
@@ -80,13 +81,13 @@ class Hero extends GameObject {
       }
     });
 
-    if (wasTopOrBottomCollision) {
+    if (wasTopCollision || wasBottomCollision) {
       this.x += this.xv * deltaTime;
     } else {
       super.update(deltaTime);
     }
 
-    this.sprite.update(deltaTime);
+    this.sprite.update(deltaTime, wasBottomCollision);
   }
 
   draw(ctx) {
