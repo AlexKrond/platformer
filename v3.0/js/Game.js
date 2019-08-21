@@ -14,7 +14,8 @@ class Game {
       START: 0,
       RUN: 1,
       PAUSE: 2,
-      GAMEOVER: 3
+      DEATH: 3,
+      GAMEOVER: 4
     };
     this.currentGameState = null;
 
@@ -31,8 +32,15 @@ class Game {
 
     this.totalDistance = 0;
     this.lastSpawnPlatformDist = 0;
-    this.distanceScore = 0;
+    this.timeScore = 0;
     this.bonusScore = 0;
+
+    this.lives = 3;
+
+    this.liveImg = new Image();
+    this.deathImg = new Image();
+    this.liveImg.src = "sprites/live.png";
+    this.deathImg.src = "sprites/death.png";
 
     Hero.img.src = "sprites/lama-spritesheet.png";
     Bonus.img.src = "sprites/bonus.png";
@@ -46,16 +54,27 @@ class Game {
       gravityIsUsed: true
     }, this);
 
-    this.bonuses = [];
-    this.platforms = [];
-    this.crashedPlatforms = [];
-
     new InputHandlerGameState(this);
     new InputHandler(this.hero);
   }
 
   start() {
-    this.platforms.push(
+    this.hero.x = this.width / 2 - c.hw / 2;
+    this.hero.y = this.height - c.hh - 100;
+    this.hero.markedForDeletion = false;
+
+    if (this.currentGameState === this.gameStates.GAMEOVER) {
+      this.lives = 3;
+      this.timeScore = 0;
+      this.bonusScore = 0;
+    }
+
+    this.totalDistance = 0;
+    this.lastSpawnPlatformDist = 0;
+
+    this.bonuses = [];
+    this.crashedPlatforms = [];
+    this.platforms = [
 
       // Левая граница
       new Platform({
@@ -85,25 +104,30 @@ class Game {
         h: 30,
         color: "black"
       }, this)
-    );
+    ];
 
     for (let i = 0; i < (this.height / 200); i++) {
       Platform.spawnNew(this, i * 200 - 100);
     }
 
-    this.currentGameState = this.gameStates.START;
+    if (this.currentGameState === this.gameStates.DEATH ||
+        this.currentGameState === this.gameStates.GAMEOVER) {
+      this.currentGameState = this.gameStates.RUN;
+    } else {
+      this.currentGameState = this.gameStates.START;
+    }
   }
 
   update(deltaTime) {
     if (this.currentGameState === this.gameStates.START ||
         this.currentGameState === this.gameStates.PAUSE ||
+        this.currentGameState === this.gameStates.DEATH ||
         this.currentGameState === this.gameStates.GAMEOVER) {
       return;
     }
 
     this.totalDistance += this.screenMoveSpeed * deltaTime;
-    // this.distanceScore = Math.floor(this.totalDistance / 2);   // Как половина пройденного расстояния
-    this.distanceScore += 5 * deltaTime;                          // Как 5 очков в секунду
+    this.timeScore += 5 * deltaTime;                          // Как 5 очков в секунду
 
     [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => {
       gameObject.markForDeletion();
@@ -123,6 +147,11 @@ class Game {
     this.bonuses = this.bonuses.filter(bonus => !bonus.markedForDeletion);
 
     if (this.hero.markedForDeletion) {
+      this.lives--;
+      this.currentGameState = this.gameStates.DEATH;
+    }
+
+    if (this.lives === 0) {
       this.currentGameState = this.gameStates.GAMEOVER;
     }
 
@@ -156,8 +185,9 @@ class Game {
     ctx.fillStyle = "red";
     ctx.font = "20px Arial";
     ctx.textAlign = "left";
-    ctx.fillText(`Score: ${Math.floor(this.distanceScore) + this.bonusScore}`, 10, 25);
+    ctx.fillText(`Score: ${Math.floor(this.timeScore) + this.bonusScore}`, 10, 25);
 
+    this.drawLives(ctx, this.width - 80, 10);
 
     switch (this.currentGameState) {
       case this.gameStates.START:
@@ -168,10 +198,27 @@ class Game {
         this.drawPause(ctx);
         break;
 
+      case this.gameStates.DEATH:
+        this.drawDeath(ctx);
+        break;
+
       case this.gameStates.GAMEOVER:
         this.drawGameOver(ctx);
         break;
     }
+  }
+
+  drawLives(ctx, x, y, scale = 1) {
+    const size = 24;
+
+    let liveImgs = [this.deathImg, this.deathImg, this.deathImg];
+    for (let i = 0; i < this.lives; i++) {
+      liveImgs[i] = this.liveImg;
+    }
+
+    ctx.drawImage(liveImgs[0], x - size * scale / 2 - size * scale * 1.2, y, size * scale, size * scale);
+    ctx.drawImage(liveImgs[1], x - size * scale / 2, y, size * scale, size * scale);
+    ctx.drawImage(liveImgs[2], x - size * scale / 2 + size * scale * 1.2, y, size * scale, size * scale);
   }
 
   drawPause(ctx) {
@@ -197,8 +244,27 @@ class Game {
     ctx.fillText("Press SPACEBAR to START", this.width / 2, this.height / 2);
   }
 
+  drawDeath(ctx) {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    ctx.fillRect(0, 0, this.width, this.height);
+
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+
+    ctx.font = "100px Arial";
+    ctx.fillText("Ooops!", this.width / 2, this.height / 2);
+
+    ctx.font = "50px Arial";
+    ctx.fillText("YOUR LIVES", this.width / 2, this.height / 1.5);
+
+    this.drawLives(ctx, this.width / 2, this.height / 1.4, 3);
+
+    ctx.font = "20px Arial";
+    ctx.fillText("Press SPACEBAR to RESUME", this.width / 2, this.height / 1.1);
+  }
+
   drawGameOver(ctx) {
-    const score = Math.floor(this.distanceScore) + this.bonusScore;
+    const score = Math.floor(this.timeScore) + this.bonusScore;
     const highScore = localStorage.highscore || 0;
     if (score > highScore) {
       localStorage.setItem("highscore", score);
