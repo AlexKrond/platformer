@@ -16,7 +16,7 @@ class Game {
       PAUSE: 2,
       GAMEOVER: 3
     };
-    this.currentGameState = this.gameStates.START;
+    this.currentGameState = null;
 
     this.width = c.gameWidth;
     this.height = c.gameHeight;
@@ -90,6 +90,8 @@ class Game {
     for (let i = 0; i < (this.height / 200); i++) {
       Platform.spawnNew(this, i * 200 - 100);
     }
+
+    this.currentGameState = this.gameStates.START;
   }
 
   screenMoving(deltaTime) {
@@ -150,6 +152,23 @@ class Game {
     ctx.fillStyle = "red";
     ctx.font = "20px Arial";
     ctx.fillText(`Score: ${Math.floor(this.distanceScore) + this.bonusScore}`, 10, 25);
+
+    if (this.currentGameState === this.gameStates.PAUSE) {
+      this.drawPause(ctx);
+    }
+  }
+
+  drawPause(ctx) {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    ctx.fillRect(0, 0, this.width, this.height);
+
+    ctx.fillStyle = "white";
+    ctx.font = "50px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("PAUSE", this.width / 2, this.height / 2);
+
+    ctx.font = "20px Arial";
+    ctx.fillText("Press SPACEBAR to resume", this.width / 2, this.height / 1.3);
   }
 }
 
