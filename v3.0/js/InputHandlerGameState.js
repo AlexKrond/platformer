@@ -16,12 +16,11 @@ class InputHandlerGameState {
             break;
 
           case game.gameStates.DEATH:
-            game.currentGameState = game.gameStates.RUN;
             game.start();
             break;
 
           case game.gameStates.GAMEOVER:
-            window.location.reload();
+            game.start();
             break;
         }
       }

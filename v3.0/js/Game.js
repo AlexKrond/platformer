@@ -32,7 +32,7 @@ class Game {
 
     this.totalDistance = 0;
     this.lastSpawnPlatformDist = 0;
-    this.distanceScore = 0;
+    this.timeScore = 0;
     this.bonusScore = 0;
 
     this.lives = 3;
@@ -54,16 +54,27 @@ class Game {
       gravityIsUsed: true
     }, this);
 
-    this.bonuses = [];
-    this.platforms = [];
-    this.crashedPlatforms = [];
-
     new InputHandlerGameState(this);
     new InputHandler(this.hero);
   }
 
   start() {
-    this.platforms.push(
+    this.hero.x = this.width / 2 - c.hw / 2;
+    this.hero.y = this.height - c.hh - 100;
+    this.hero.markedForDeletion = false;
+
+    if (this.currentGameState === this.gameStates.GAMEOVER) {
+      this.lives = 3;
+      this.timeScore = 0;
+      this.bonusScore = 0;
+    }
+
+    this.totalDistance = 0;
+    this.lastSpawnPlatformDist = 0;
+
+    this.bonuses = [];
+    this.crashedPlatforms = [];
+    this.platforms = [
 
       // Левая граница
       new Platform({
@@ -93,13 +104,18 @@ class Game {
         h: 30,
         color: "black"
       }, this)
-    );
+    ];
 
     for (let i = 0; i < (this.height / 200); i++) {
       Platform.spawnNew(this, i * 200 - 100);
     }
 
-    this.currentGameState = this.gameStates.START;
+    if (this.currentGameState === this.gameStates.DEATH ||
+        this.currentGameState === this.gameStates.GAMEOVER) {
+      this.currentGameState = this.gameStates.RUN;
+    } else {
+      this.currentGameState = this.gameStates.START;
+    }
   }
 
   update(deltaTime) {
@@ -111,8 +127,7 @@ class Game {
     }
 
     this.totalDistance += this.screenMoveSpeed * deltaTime;
-    // this.distanceScore = Math.floor(this.totalDistance / 2);   // Как половина пройденного расстояния
-    this.distanceScore += 5 * deltaTime;                          // Как 5 очков в секунду
+    this.timeScore += 5 * deltaTime;                          // Как 5 очков в секунду
 
     [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => {
       gameObject.markForDeletion();
@@ -170,7 +185,7 @@ class Game {
     ctx.fillStyle = "red";
     ctx.font = "20px Arial";
     ctx.textAlign = "left";
-    ctx.fillText(`Score: ${Math.floor(this.distanceScore) + this.bonusScore}`, 10, 25);
+    ctx.fillText(`Score: ${Math.floor(this.timeScore) + this.bonusScore}`, 10, 25);
 
     this.drawLives(ctx, this.width - 80, 10);
 
@@ -249,7 +264,7 @@ class Game {
   }
 
   drawGameOver(ctx) {
-    const score = Math.floor(this.distanceScore) + this.bonusScore;
+    const score = Math.floor(this.timeScore) + this.bonusScore;
     const highScore = localStorage.highscore || 0;
     if (score > highScore) {
       localStorage.setItem("highscore", score);
