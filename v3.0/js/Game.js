@@ -183,8 +183,8 @@ class Game {
         break;
 
       case this.gameStates.DEATH:
-              this.drawDeath(ctx);
-              break;
+        this.drawDeath(ctx);
+        break;
 
       case this.gameStates.GAMEOVER:
         this.drawGameOver(ctx);
@@ -195,9 +195,14 @@ class Game {
   drawLives(ctx, x, y, scale = 1) {
     const size = 24;
 
-    ctx.drawImage(this.liveImg, x - size * scale / 2 - size * scale * 1.2, y, size * scale, size * scale);
-    ctx.drawImage(this.liveImg, x - size * scale / 2, y, size * scale, size * scale);
-    ctx.drawImage(this.deathImg, x - size * scale / 2 + size * scale * 1.2, y, size * scale, size * scale);
+    let liveImgs = [this.deathImg, this.deathImg, this.deathImg];
+    for (let i = 0; i < this.lives; i++) {
+      liveImgs[i] = this.liveImg;
+    }
+
+    ctx.drawImage(liveImgs[0], x - size * scale / 2 - size * scale * 1.2, y, size * scale, size * scale);
+    ctx.drawImage(liveImgs[1], x - size * scale / 2, y, size * scale, size * scale);
+    ctx.drawImage(liveImgs[2], x - size * scale / 2 + size * scale * 1.2, y, size * scale, size * scale);
   }
 
   drawPause(ctx) {
@@ -236,7 +241,7 @@ class Game {
     ctx.font = "50px Arial";
     ctx.fillText("YOUR LIVES", this.width / 2, this.height / 1.5);
 
-    this.drawLives(ctx, this.width / 2, this.height / 1.4, 3)
+    this.drawLives(ctx, this.width / 2, this.height / 1.4, 3);
 
     ctx.font = "20px Arial";
     ctx.fillText("Press SPACEBAR to RESUME", this.width / 2, this.height / 1.1);
