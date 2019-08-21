@@ -135,6 +135,10 @@ class Game {
       this.currentGameState = this.gameStates.DEATH;
     }
 
+    if (this.lives === 0) {
+      this.currentGameState = this.gameStates.GAMEOVER;
+    }
+
     if (this.totalDistance > this.lastSpawnPlatformDist + 200) { // TODO: 200 вынести в константы или завязать на разброс в спавне
       Platform.spawnNew(this, -50);
       this.lastSpawnPlatformDist += 200;
@@ -167,7 +171,7 @@ class Game {
     ctx.textAlign = "left";
     ctx.fillText(`Score: ${Math.floor(this.distanceScore) + this.bonusScore}`, 10, 25);
 
-    this.drawLives(ctx);
+    this.drawLives(ctx, this.width - 80, 10);
 
     switch (this.currentGameState) {
       case this.gameStates.START:
@@ -178,16 +182,22 @@ class Game {
         this.drawPause(ctx);
         break;
 
+      case this.gameStates.DEATH:
+              this.drawDeath(ctx);
+              break;
+
       case this.gameStates.GAMEOVER:
         this.drawGameOver(ctx);
         break;
     }
   }
 
-  drawLives(ctx) {
-    ctx.drawImage(this.liveImg, this.width - 100, 10, 24, 24);
-    ctx.drawImage(this.liveImg, this.width - 70, 10, 24, 24);
-    ctx.drawImage(this.deathImg, this.width - 40, 10, 24, 24);
+  drawLives(ctx, x, y, scale = 1) {
+    const size = 24;
+
+    ctx.drawImage(this.liveImg, x - size * scale / 2 - size * scale * 1.2, y, size * scale, size * scale);
+    ctx.drawImage(this.liveImg, x - size * scale / 2, y, size * scale, size * scale);
+    ctx.drawImage(this.deathImg, x - size * scale / 2 + size * scale * 1.2, y, size * scale, size * scale);
   }
 
   drawPause(ctx) {
@@ -211,6 +221,25 @@ class Game {
     ctx.font = "50px Arial";
     ctx.textAlign = "center";
     ctx.fillText("Press SPACEBAR to START", this.width / 2, this.height / 2);
+  }
+
+  drawDeath(ctx) {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    ctx.fillRect(0, 0, this.width, this.height);
+
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+
+    ctx.font = "100px Arial";
+    ctx.fillText("Ooops!", this.width / 2, this.height / 2);
+
+    ctx.font = "50px Arial";
+    ctx.fillText("YOUR LIVES", this.width / 2, this.height / 1.5);
+
+    this.drawLives(ctx, this.width / 2, this.height / 1.4, 3)
+
+    ctx.font = "20px Arial";
+    ctx.fillText("Press SPACEBAR to RESUME", this.width / 2, this.height / 1.1);
   }
 
   drawGameOver(ctx) {
