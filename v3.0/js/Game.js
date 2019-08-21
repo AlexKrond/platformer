@@ -105,6 +105,7 @@ class Game {
   update(deltaTime) {
     if (this.currentGameState === this.gameStates.START ||
         this.currentGameState === this.gameStates.PAUSE ||
+        this.currentGameState === this.gameStates.DEATH ||
         this.currentGameState === this.gameStates.GAMEOVER) {
       return;
     }
