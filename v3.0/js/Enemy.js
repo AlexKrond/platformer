@@ -22,7 +22,7 @@ class Enemy extends Character {
     this.AI.update();
     super.update(deltaTime);
 
-    this.weapon.update();
+    this.weapon.update(deltaTime);
   }
 
   draw(ctx) {
