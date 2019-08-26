@@ -74,7 +74,7 @@ class Game {
       //   gravityIsUsed: true
       // }, this),
       new Enemy({
-        x: this.width / 1.5,
+        x: 50,
         y: c.hh + 100,
         w: c.hw,
         h: c.hh,
