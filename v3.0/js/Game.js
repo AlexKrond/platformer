@@ -57,22 +57,22 @@ class Game {
     }, this);
 
     this.enemies = [
-      new Enemy({
-        x: this.width / 6,
-        y: c.hh + 100,
-        w: c.hw,
-        h: c.hh,
-        color: "blue",
-        gravityIsUsed: true
-      }, this),
-      new Enemy({
-        x: this.width / 4,
-        y: c.hh + 100,
-        w: c.hw,
-        h: c.hh,
-        color: "blue",
-        gravityIsUsed: true
-      }, this),
+      // new Enemy({
+      //   x: this.width / 6,
+      //   y: c.hh + 100,
+      //   w: c.hw,
+      //   h: c.hh,
+      //   color: "blue",
+      //   gravityIsUsed: true
+      // }, this),
+      // new Enemy({
+      //   x: this.width / 4,
+      //   y: c.hh + 100,
+      //   w: c.hw,
+      //   h: c.hh,
+      //   color: "blue",
+      //   gravityIsUsed: true
+      // }, this),
       new Enemy({
         x: this.width / 1.5,
         y: c.hh + 100,

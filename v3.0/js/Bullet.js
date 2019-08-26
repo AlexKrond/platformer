@@ -13,6 +13,13 @@ class Bullet extends GameObject {
     this.h = 2;
   }
 
+  markForDeletion() {
+    if (this.y > this.game.height + this.game.hero.h ||
+        (this.x + this.w) < 0 ||
+        this.x > this.game.width) {
+      this.markedForDeletion = true;
+    }
+  }
 }
 
 export default Bullet
