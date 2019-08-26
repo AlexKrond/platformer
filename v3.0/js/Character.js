@@ -23,54 +23,15 @@ class Character extends GameObject {
     this.goRight = props.goRight || false;
 
     this.lastBottomCollidePlatform = null;
+    this.wasTopCollision = false;
+    this.wasBottomCollision = false;
 
     this.sprite = new Sprite({frameWidth: 200, frameHeight: 200}, this);
   }
 
   update(deltaTime) {
-    switch (true) {
-      case this.goLeft:
-        this.moveLeft(deltaTime);
-        break;
-      case this.goRight:
-        this.moveRight(deltaTime);
-        break;
-      default:
-        this.stopping(deltaTime);
-    }
-
-    let wasTopCollision = false;
-    let wasBottomCollision = false;
-    this.game.platforms.forEach(platform => {
-      const collideSide = detectCollision(this, platform, deltaTime);
-
-      switch (collideSide) {
-        case "side":
-          this.xv = -this.xv * 0.5;
-          break;
-
-        case "top":
-          wasTopCollision = true;
-          this.y = platform.y + platform.h;
-          this.yv = 0;
-          break;
-
-        case "bottom":
-          wasBottomCollision = true;
-
-          this.y = platform.y - this.h;
-          this.rebound(platform);
-
-          if (platform.y < this.game.height * 0.66 &&
-              Math.random() < this.game.crashPlatformFrequency &&
-              platform !== this.lastBottomCollidePlatform) {
-            platform.isCrashed = true;
-          }
-
-          this.lastBottomCollidePlatform = platform;
-          break;
-      }
-    });
+    this.checkHorizontalMoving(deltaTime);
+    this.checkCollisionsWithPlatforms(deltaTime);
 
     this.game.bonuses.forEach(bonus => {
       const collideSide = detectCollision(this, bonus, deltaTime);
@@ -81,13 +42,9 @@ class Character extends GameObject {
       }
     });
 
-    if (wasTopCollision || wasBottomCollision) {
-      this.x += this.xv * deltaTime;
-    } else {
-      super.update(deltaTime);
-    }
+    this.updatePosition(deltaTime);
 
-    this.sprite.update(deltaTime, wasBottomCollision);
+    this.sprite.update(deltaTime, this.wasBottomCollision);
   }
 
   draw(ctx) {
@@ -151,6 +108,63 @@ class Character extends GameObject {
       } else {
         this.yv = 0;
       }
+    }
+  }
+
+  checkHorizontalMoving(deltaTime) {
+    switch (true) {
+      case this.goLeft:
+        this.moveLeft(deltaTime);
+        break;
+      case this.goRight:
+        this.moveRight(deltaTime);
+        break;
+      default:
+        this.stopping(deltaTime);
+    }
+  }
+
+  checkCollisionsWithPlatforms(deltaTime) {
+    this.wasTopCollision = false;
+    this.wasBottomCollision = false;
+
+    this.game.platforms.forEach(platform => {
+      const collideSide = detectCollision(this, platform, deltaTime);
+
+      switch (collideSide) {
+        case "side":
+          this.xv = -this.xv * 0.5;
+          break;
+
+        case "top":
+          this.wasTopCollision = true;
+          this.y = platform.y + platform.h;
+          this.yv = 0;
+          break;
+
+        case "bottom":
+          this.wasBottomCollision = true;
+
+          this.y = platform.y - this.h;
+          this.rebound(platform);
+
+          if (platform.y < this.game.height * 0.66 &&
+              Math.random() < this.game.crashPlatformFrequency &&
+              platform !== this.lastBottomCollidePlatform) {
+            platform.isCrashed = true;
+          }
+
+          this.lastBottomCollidePlatform = platform;
+          break;
+      }
+    });
+  }
+
+  updatePosition(deltaTime) {
+    if (this.wasTopCollision || this.wasBottomCollision) {
+      this.x += this.xv * deltaTime;
+    } else {
+      super.update(deltaTime);
     }
   }
 }
