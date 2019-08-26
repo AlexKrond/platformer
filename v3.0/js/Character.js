@@ -5,7 +5,7 @@ import detectCollision from "./detectCollision.js"
 import GameObject from "./GameObject.js"
 import Sprite from "./Sprite.js"
 
-class Hero extends GameObject {
+class Character extends GameObject {
   #acceleration = c.acceleration;
   #startSpeed = c.startSpeed;
   #maxSpeed = c.maxSpeed;
@@ -91,7 +91,6 @@ class Hero extends GameObject {
   }
 
   draw(ctx) {
-    // ctx.drawImage(Hero.img, this.x, this.y, this.w, this.h);
     this.sprite.draw(ctx);
   }
 
@@ -156,4 +155,4 @@ class Hero extends GameObject {
   }
 }
 
-export default Hero
+export default Character

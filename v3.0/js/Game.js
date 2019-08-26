@@ -3,7 +3,7 @@
 import c from "./const.js"
 import InputHandler from "./InputHandler.js"
 import InputHandlerGameState from "./InputHandlerGameState.js"
-import Hero from "./Hero.js"
+import Character from "./Character.js"
 import Bonus from "./Bonus.js"
 import Platform from "./Platform.js"
 import CrashedPlatform from "./СrashedPlatform.js"
@@ -42,10 +42,10 @@ class Game {
     this.liveImg.src = "sprites/live.png";
     this.deathImg.src = "sprites/death.png";
 
-    Hero.img.src = "sprites/lama-spritesheet.png";
+    Character.img.src = "sprites/lama-spritesheet.png";
     Bonus.img.src = "sprites/bonus.png";
 
-    this.hero = new Hero({
+    this.hero = new Character({
       x: this.width / 2 - c.hw / 2,
       y: this.height - c.hh - 100,
       w: c.hw,
