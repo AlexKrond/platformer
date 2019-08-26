@@ -3,6 +3,8 @@
 import c from "./const.js"
 import InputHandler from "./InputHandler.js"
 import InputHandlerGameState from "./InputHandlerGameState.js"
+import Character from "./Character.js"
+import Enemy from "./Enemy.js"
 import Hero from "./Hero.js"
 import Bonus from "./Bonus.js"
 import Platform from "./Platform.js"
@@ -51,6 +53,15 @@ class Game {
       w: c.hw,
       h: c.hh,
       color: "red",
+      gravityIsUsed: true
+    }, this);
+
+    this.enemies = new Enemy({
+      x: this.width / 2 - c.hw / 2,
+      y: c.hh + 100,
+      w: c.hw,
+      h: c.hh,
+      color: "blue",
       gravityIsUsed: true
     }, this);
 
@@ -129,18 +140,12 @@ class Game {
     this.totalDistance += this.screenMoveSpeed * deltaTime;
     this.timeScore += 5 * deltaTime;                          // Как 5 очков в секунду
 
-    [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => {
-      gameObject.markForDeletion();
-    });
-    [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => {
-      gameObject.screenMoving(deltaTime);
-    });
-    [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => {
-      gameObject.gravityEffect(deltaTime);
-    });
-    [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => {
-      gameObject.update(deltaTime);
-    });
+    this.gameObjects = [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.enemies, this.hero];
+
+    this.gameObjects.forEach(gameObject => gameObject.markForDeletion());
+    this.gameObjects.forEach(gameObject => gameObject.screenMoving(deltaTime));
+    this.gameObjects.forEach(gameObject => gameObject.gravityEffect(deltaTime));
+    this.gameObjects.forEach(gameObject => gameObject.update(deltaTime));
 
     this.crashedPlatforms = this.crashedPlatforms.filter(crashedPlatform => !crashedPlatform.markedForDeletion);
     this.platforms = this.platforms.filter(platform => !platform.markedForDeletion);
@@ -178,7 +183,7 @@ class Game {
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, this.width, this.height);
 
-    [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.hero].forEach(gameObject => {
+    [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.enemies, this.hero].forEach(gameObject => {
       gameObject.draw(ctx);
     });
 
