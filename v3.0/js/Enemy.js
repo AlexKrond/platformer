@@ -23,6 +23,12 @@ class Enemy extends Character {
     super.update(deltaTime);
 
     this.weapon.update(deltaTime);
+
+    const distance = Math.sqrt((this.game.hero.x - this.x) * (this.game.hero.x - this.x) +
+        (this.game.hero.y - this.y) * (this.game.hero.y - this.y));
+    if (distance <= 400) {
+      this.weapon.fire();
+    }
   }
 
   draw(ctx) {

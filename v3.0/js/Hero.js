@@ -9,6 +9,8 @@ class Hero extends Character {
 
   constructor(props, game) {
     super(props, game);
+    this.health = 100;
+
     this.sprite = new Sprite({frameWidth: 200, frameHeight: 200}, this);
   }
 
@@ -17,6 +19,7 @@ class Hero extends Character {
     super.checkCollisionsWithPlatforms(deltaTime);
 
     this.checkCollisionsWithBonuses(deltaTime);
+    this.checkForBullets(deltaTime);
 
     super.updatePosition(deltaTime);
 
@@ -25,6 +28,11 @@ class Hero extends Character {
 
   draw(ctx) {
     this.sprite.draw(ctx);
+
+    ctx.fillStyle = "red";
+    ctx.textAlign = "center";
+    ctx.font = "15px Arial";
+    ctx.fillText(this.health.toString(), this.x + this.w / 2, this.y - 10);
   }
 
   checkCollisionsWithBonuses(deltaTime) {
@@ -35,6 +43,19 @@ class Hero extends Character {
         this.game.bonusScore += 100;
         bonus.markedForDeletion = true;
       }
+    });
+  }
+
+  checkForBullets(deltaTime) {
+    this.game.enemies.forEach(enemy => {
+      enemy.weapon.bullets.forEach(bullet => {
+        const collideSide = detectCollision(this, bullet, deltaTime);
+
+        if (collideSide !== "none") {
+          this.health -= bullet.damage;
+          bullet.markedForDeletion = true;
+        }
+      });
     });
   }
 }

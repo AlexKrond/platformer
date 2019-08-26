@@ -92,6 +92,7 @@ class Game {
     this.hero.y = this.height - c.hh - 100;
     this.hero.xv = 0;
     this.hero.yv = 0;
+    this.hero.health = 100;
     this.hero.markedForDeletion = false;
 
     if (this.currentGameState === this.gameStates.GAMEOVER) {
@@ -170,7 +171,7 @@ class Game {
     this.platforms = this.platforms.filter(platform => !platform.markedForDeletion);
     this.bonuses = this.bonuses.filter(bonus => !bonus.markedForDeletion);
 
-    if (this.hero.markedForDeletion) {
+    if (this.hero.markedForDeletion || this.hero.health <= 0) {
       this.lives--;
       this.currentGameState = this.gameStates.DEATH;
     }

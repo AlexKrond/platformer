@@ -9,19 +9,16 @@ class Weapon extends GameObject {
     this.owner = owner;
     this.game = game;
     this.bullets = [];
-
-    this.spawnBullet = this.spawnBullet.bind(this);
-    window.addEventListener("click", this.spawnBullet);
   }
 
-  spawnBullet(event) {
+  fire() {
     this.bullets.push(
         new Bullet({
           x: this.x,
           y: this.y,
           xv: this.game.hero.x + this.game.hero.w / 2 - this.x,
           yv: this.game.hero.y + this.game.hero.h / 2 - this.y,
-          collides: false,
+          collides: true,
           color: "green"
         }, this.owner, this.game)
     );
@@ -32,6 +29,7 @@ class Weapon extends GameObject {
     this.y = this.owner.y + this.owner.h / 2 - this.h / 2;
 
     this.bullets.forEach(bullet => bullet.update(deltaTime));
+    this.bullets = this.bullets.filter(bullet => !bullet.markedForDeletion);
   }
 
   draw(ctx) {
