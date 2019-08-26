@@ -56,14 +56,32 @@ class Game {
       gravityIsUsed: true
     }, this);
 
-    this.enemies = new Enemy({
-      x: this.width / 2 - c.hw / 2,
-      y: c.hh + 100,
-      w: c.hw,
-      h: c.hh,
-      color: "blue",
-      gravityIsUsed: true
-    }, this);
+    this.enemies = [
+      new Enemy({
+        x: this.width / 6,
+        y: c.hh + 100,
+        w: c.hw,
+        h: c.hh,
+        color: "blue",
+        gravityIsUsed: true
+      }, this),
+      new Enemy({
+        x: this.width / 4,
+        y: c.hh + 100,
+        w: c.hw,
+        h: c.hh,
+        color: "blue",
+        gravityIsUsed: true
+      }, this),
+      new Enemy({
+        x: this.width / 1.5,
+        y: c.hh + 100,
+        w: c.hw,
+        h: c.hh,
+        color: "blue",
+        gravityIsUsed: true
+      }, this)
+    ];
 
     new InputHandlerGameState(this);
     new InputHandler(this.hero);
@@ -109,9 +127,10 @@ class Game {
 
       // Начальная платформа для игрока
       new Platform({
-        x: this.width / 2 - 100,
+        // x: this.width / 2 - 100,
+        x: -100,
         y: this.height - 100,
-        w: 200,
+        w: this.width + 200,
         h: 30,
         color: "black"
       }, this)
@@ -140,7 +159,7 @@ class Game {
     this.totalDistance += this.screenMoveSpeed * deltaTime;
     this.timeScore += 5 * deltaTime;                          // Как 5 очков в секунду
 
-    this.gameObjects = [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.enemies, this.hero];
+    this.gameObjects = [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, ...this.enemies, this.hero];
 
     this.gameObjects.forEach(gameObject => gameObject.markForDeletion());
     this.gameObjects.forEach(gameObject => gameObject.screenMoving(deltaTime));
@@ -183,7 +202,7 @@ class Game {
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, this.width, this.height);
 
-    [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, this.enemies, this.hero].forEach(gameObject => {
+    [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, ...this.enemies, this.hero].forEach(gameObject => {
       gameObject.draw(ctx);
     });
 
