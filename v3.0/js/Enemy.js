@@ -3,6 +3,7 @@
 import Character from "./Character.js"
 import EnemyAI from "./EnemyAI.js"
 import Weapon from "./Weapon.js"
+import detectCollision from "./detectCollision.js"
 
 class Enemy extends Character {
   constructor(props, game) {
@@ -22,6 +23,7 @@ class Enemy extends Character {
   update(deltaTime) {
     this.AI.update();
     super.update(deltaTime);
+    this.checkForBullets(deltaTime);
 
     this.weapon.update(deltaTime);
 
@@ -29,6 +31,10 @@ class Enemy extends Character {
         (this.game.hero.y - this.y) * (this.game.hero.y - this.y));
     if (distance <= 400) {
       this.weapon.fire(deltaTime);
+    }
+
+    if (this.health <= 0) {
+      this.markedForDeletion = true;
     }
   }
 
@@ -40,6 +46,17 @@ class Enemy extends Character {
     ctx.textAlign = "center";
     ctx.font = "15px Arial";
     ctx.fillText(this.health.toString(), this.x + this.w / 2, this.y - 10);
+  }
+
+  checkForBullets(deltaTime) {
+    this.game.hero.weapon.bullets.forEach(bullet => {
+      const collideSide = detectCollision(this, bullet, deltaTime);
+
+      if (collideSide !== "none") {
+        this.health -= bullet.damage;
+        bullet.markedForDeletion = true;
+      }
+    });
   }
 }
 
