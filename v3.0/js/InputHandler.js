@@ -38,6 +38,16 @@ class InputHandler {
           break;
       }
     });
+
+    // Нажатие кнопки мыши для стрельбы
+    window.addEventListener("mousedown", event => gameObject.fire = true);
+    window.addEventListener("mouseup", event => gameObject.fire = false);
+
+    // Захват координат мыши
+    window.addEventListener("mousemove", event => {
+      gameObject.clientY = event.clientY;
+      gameObject.clientX = event.clientX;
+    });
   }
 }
 

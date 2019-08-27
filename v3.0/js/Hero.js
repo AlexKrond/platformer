@@ -14,6 +14,9 @@ class Hero extends Character {
 
     this.sprite = new Sprite({frameWidth: 200, frameHeight: 200}, this);
 
+    this.fire = false;
+    this.clientX = null;
+    this.clientY = null;
     this.weapon = new Weapon({
       x: this.x + this.w / 2,
       y: this.y + this.h / 2,
@@ -34,6 +37,9 @@ class Hero extends Character {
     super.updatePosition(deltaTime);
 
     this.weapon.update(deltaTime);
+    if (this.fire) {
+      this.weapon.fire(deltaTime, this.clientX, this.clientY); // TODO: время перезарядки и скорострельности сбрасывается только при нажатой клавише мыши
+    }
 
     this.sprite.update(deltaTime, this.wasBottomCollision);
   }

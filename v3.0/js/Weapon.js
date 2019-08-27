@@ -39,7 +39,7 @@ class Weapon extends GameObject {
     this.bullets.forEach(bullet => bullet.draw(ctx));
   }
 
-  fire(deltaTime) {
+  fire(deltaTime, xTarget, yTarget) {
     if (this.currentRoundsInMagazine === 0) {
       this.reload(deltaTime);
       return;
@@ -52,8 +52,8 @@ class Weapon extends GameObject {
     this.currentRateOfFire = this.rateOfFire;
     this.currentRoundsInMagazine--;
 
-    let xBulletSpeed = this.game.hero.x + this.game.hero.w / 2 - this.x;
-    let yBulletSpeed = this.game.hero.y + this.game.hero.h / 2 - this.y;
+    let xBulletSpeed = xTarget - this.x;
+    let yBulletSpeed = yTarget - this.y;
     let bulletSpeed = Math.sqrt(xBulletSpeed * xBulletSpeed + yBulletSpeed * yBulletSpeed);
     let factor = bulletSpeed / this.bulletsSpeed;
     this.bullets.push(
