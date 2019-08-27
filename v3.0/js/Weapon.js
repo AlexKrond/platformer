@@ -9,6 +9,7 @@ class Weapon extends GameObject {
     this.owner = owner;
     this.game = game;
 
+    this.bulletsSpeed = 1000;
     this.maxRoundsInMagazine = 10;
     this.rateOfFire = 0.3;
     this.reloadTime = 5;
@@ -51,12 +52,16 @@ class Weapon extends GameObject {
     this.currentRateOfFire = this.rateOfFire;
     this.currentRoundsInMagazine--;
 
+    let xBulletSpeed = this.game.hero.x + this.game.hero.w / 2 - this.x;
+    let yBulletSpeed = this.game.hero.y + this.game.hero.h / 2 - this.y;
+    let bulletSpeed = Math.sqrt(xBulletSpeed * xBulletSpeed + yBulletSpeed * yBulletSpeed);
+    let factor = bulletSpeed / this.bulletsSpeed;
     this.bullets.push(
         new Bullet({
           x: this.x,
           y: this.y,
-          xv: (this.game.hero.x + this.game.hero.w / 2 - this.x) * 2, // TODO: доработать это
-          yv: (this.game.hero.y + this.game.hero.h / 2 - this.y) * 2, // и это
+          xv: xBulletSpeed / factor,
+          yv: yBulletSpeed / factor,
           collides: true,
           gravityIsUsed: true,
           color: "green"
