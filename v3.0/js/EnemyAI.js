@@ -5,7 +5,7 @@ class EnemyAI {
     this.enemy = enemy;
     this.game = game;
 
-    this.maxJumpHeight = this.enemy.jumpForce / 2 - 10; // При условии jumpForce == gravity
+    this.maxJumpHeight = (this.enemy.jumpForce * this.enemy.jumpForce * 0.9) / (2 * this.game.gravity);
     this.targetPlatform = null;
   }
 
