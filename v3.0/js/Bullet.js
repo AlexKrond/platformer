@@ -9,8 +9,8 @@ class Bullet extends GameObject {
 
     this.damage = 1;
 
-    this.w = 2;
-    this.h = 2;
+    this.w = 5;
+    this.h = this.w;
   }
 
   markForDeletion() {
