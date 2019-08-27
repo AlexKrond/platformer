@@ -56,33 +56,6 @@ class Game {
       gravityIsUsed: true
     }, this);
 
-    this.enemies = [
-      // new Enemy({
-      //   x: this.width / 6,
-      //   y: c.hh + 100,
-      //   w: c.hw,
-      //   h: c.hh,
-      //   color: "blue",
-      //   gravityIsUsed: true
-      // }, this),
-      // new Enemy({
-      //   x: this.width / 4,
-      //   y: c.hh + 100,
-      //   w: c.hw,
-      //   h: c.hh,
-      //   color: "blue",
-      //   gravityIsUsed: true
-      // }, this),
-      new Enemy({
-        x: 50,
-        y: c.hh + 100,
-        w: c.hw,
-        h: c.hh,
-        color: "blue",
-        gravityIsUsed: true
-      }, this)
-    ];
-
     new InputHandlerGameState(this);
     new InputHandler(this.hero);
   }
@@ -137,6 +110,17 @@ class Game {
       }, this)
     ];
 
+    this.enemies = [
+      new Enemy({
+        x: 50,
+        y: c.hh + 100,
+        w: c.hw,
+        h: c.hh,
+        color: "blue",
+        gravityIsUsed: true
+      }, this)
+    ];
+
     for (let i = 0; i < (this.height / 200); i++) {
       Platform.spawnNew(this, i * 200 - 100);
     }
@@ -170,6 +154,7 @@ class Game {
     this.crashedPlatforms = this.crashedPlatforms.filter(crashedPlatform => !crashedPlatform.markedForDeletion);
     this.platforms = this.platforms.filter(platform => !platform.markedForDeletion);
     this.bonuses = this.bonuses.filter(bonus => !bonus.markedForDeletion);
+    this.enemies = this.enemies.filter(enemy => !enemy.markedForDeletion);
 
     if (this.hero.markedForDeletion || this.hero.health <= 0) {
       this.lives--;
@@ -193,6 +178,19 @@ class Game {
             w: 32,
             h: 32,
             color: "gold",
+            gravityIsUsed: true
+          }, this)
+      );
+    }
+
+    if (this.enemies.length === 0) {
+      this.enemies.push(
+          new Enemy({
+            x: 50,
+            y: c.hh + 100,
+            w: c.hw,
+            h: c.hh,
+            color: "blue",
             gravityIsUsed: true
           }, this)
       );
