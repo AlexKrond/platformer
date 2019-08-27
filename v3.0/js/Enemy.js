@@ -7,6 +7,7 @@ import Weapon from "./Weapon.js"
 class Enemy extends Character {
   constructor(props, game) {
     super(props, game);
+    this.health = 100;
     this.AI = new EnemyAI(this, game);
     this.weapon = new Weapon({
       x: this.x + this.w / 2,
@@ -34,6 +35,11 @@ class Enemy extends Character {
   draw(ctx) {
     super.draw(ctx);
     this.weapon.draw(ctx);
+
+    ctx.fillStyle = "red";
+    ctx.textAlign = "center";
+    ctx.font = "15px Arial";
+    ctx.fillText(this.health.toString(), this.x + this.w / 2, this.y - 10);
   }
 }
 
