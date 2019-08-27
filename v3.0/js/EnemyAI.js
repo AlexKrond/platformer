@@ -7,6 +7,7 @@ class EnemyAI {
 
     this.maxJumpHeight = (this.enemy.jumpForce * this.enemy.jumpForce * 0.99) / (2 * this.game.gravity);
     this.targetPlatform = null;
+    this.beforeLastBottomCollidePlatform = this.enemy.lastBottomCollidePlatform;
     this.isJumping = false;
   }
 
@@ -20,7 +21,8 @@ class EnemyAI {
       // Выделим её красным
       this.targetPlatform.color = "red";
 
-      if (this.enemy.lastBottomCollidePlatform === this.targetPlatform) {
+      if (this.enemy.lastBottomCollidePlatform === this.targetPlatform ||
+          this.beforeLastBottomCollidePlatform !== this.enemy.lastBottomCollidePlatform) {
         this.targetPlatform = null;
         this.isJumping = false;
         return;
@@ -29,6 +31,7 @@ class EnemyAI {
       this.enemy.jump = true;
       if (this.enemy.yv > -this.enemy.jumpForce * 0.95 && !this.isJumping) return;
       this.isJumping = true;
+
 
       switch (true) {
         case this.checkLeftPlat(this.targetPlatform):
@@ -59,6 +62,7 @@ class EnemyAI {
 
         default:
           this.targetPlatform = null;
+          this.isJumping = false;
           break;
       }
 
@@ -67,14 +71,13 @@ class EnemyAI {
       this.enemy.goRight = false;
       this.enemy.jump = false;
 
-      // if (!this.enemy.wasBottomCollision) return;
-
       if ((this.enemy.x + this.enemy.w) < this.game.hero.x) {
 
         if ((this.enemy.x + this.enemy.w) < (this.enemy.lastBottomCollidePlatform.x + this.enemy.lastBottomCollidePlatform.w)) {
           this.enemy.goRight = true;
         } else {
           this.targetPlatform = this.getPlatform("right");
+          this.beforeLastBottomCollidePlatform = this.enemy.lastBottomCollidePlatform;
         }
 
       } else if (this.enemy.x > (this.game.hero.x + this.game.hero.w)) {
@@ -83,6 +86,7 @@ class EnemyAI {
           this.enemy.goLeft = true;
         } else {
           this.targetPlatform = this.getPlatform("left");
+          this.beforeLastBottomCollidePlatform = this.enemy.lastBottomCollidePlatform;
         }
       }
     }
