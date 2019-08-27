@@ -3,6 +3,7 @@
 import Character from "./Character.js"
 import detectCollision from "./detectCollision.js"
 import Sprite from "./Sprite.js"
+import Weapon from "./Weapon.js"
 
 class Hero extends Character {
   static img = new Image();
@@ -12,6 +13,15 @@ class Hero extends Character {
     this.health = 100;
 
     this.sprite = new Sprite({frameWidth: 200, frameHeight: 200}, this);
+
+    this.weapon = new Weapon({
+      x: this.x + this.w / 2,
+      y: this.y + this.h / 2,
+      w: 20,
+      h: 5,
+      collides: false,
+      color: "red"
+    }, this, game);
   }
 
   update(deltaTime) {
@@ -23,11 +33,14 @@ class Hero extends Character {
 
     super.updatePosition(deltaTime);
 
+    this.weapon.update(deltaTime);
+
     this.sprite.update(deltaTime, this.wasBottomCollision);
   }
 
   draw(ctx) {
     this.sprite.draw(ctx);
+    this.weapon.draw(ctx);
 
     ctx.fillStyle = "red";
     ctx.textAlign = "center";
