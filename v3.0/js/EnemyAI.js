@@ -73,7 +73,7 @@ class EnemyAI {
 
       if ((this.enemy.x + this.enemy.w) < this.game.hero.x) {
 
-        if ((this.enemy.x + this.enemy.w) < (this.enemy.lastBottomCollidePlatform.x + this.enemy.lastBottomCollidePlatform.w)) {
+        if ((this.enemy.x + this.enemy.w + this.enemy.xv / this.enemy.horizontalBraking) < (this.enemy.lastBottomCollidePlatform.x + this.enemy.lastBottomCollidePlatform.w)) {
           this.enemy.goRight = true;
         } else {
           this.targetPlatform = this.getPlatform("right");
@@ -82,7 +82,7 @@ class EnemyAI {
 
       } else if (this.enemy.x > (this.game.hero.x + this.game.hero.w)) {
 
-        if (this.enemy.x > this.enemy.lastBottomCollidePlatform.x) {
+        if ((this.enemy.x + this.enemy.xv / this.enemy.horizontalBraking) > this.enemy.lastBottomCollidePlatform.x) {
           this.enemy.goLeft = true;
         } else {
           this.targetPlatform = this.getPlatform("left");
