@@ -10,6 +10,7 @@ class Hero extends Character {
 
   constructor(props, game) {
     super(props, game);
+    this.game = game;
     this.health = 100;
 
     this.sprite = new Sprite({frameWidth: 200, frameHeight: 200}, this);
@@ -24,7 +25,7 @@ class Hero extends Character {
       h: 5,
       collides: false,
       color: "red"
-    }, this, game);
+    }, this, this.game);
   }
 
   update(deltaTime) {
@@ -38,7 +39,8 @@ class Hero extends Character {
 
     this.weapon.update(deltaTime);
     if (this.fire) {
-      this.weapon.fire(deltaTime, this.clientX, this.clientY); // TODO: время перезарядки и скорострельности сбрасывается только при нажатой клавише мыши
+      let rect = this.game.canvas.getBoundingClientRect();
+      this.weapon.fire(deltaTime, this.clientX - rect.left, this.clientY - rect.top);
     }
 
     this.sprite.update(deltaTime, this.wasBottomCollision);

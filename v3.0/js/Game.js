@@ -23,6 +23,7 @@ class Game {
 
     this.width = c.gameWidth;
     this.height = c.gameHeight;
+    this.canvas = null;
 
     this.screenMoveSpeed = c.screenMoveSpeed;
 
