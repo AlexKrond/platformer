@@ -6,6 +6,7 @@ const cnv = document.querySelector("#game");
 const ctx = cnv.getContext("2d");
 
 const game = new Game();
+game.canvas = cnv;
 
 cnv.width = game.width;
 cnv.height = game.height;
