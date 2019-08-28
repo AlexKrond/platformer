@@ -1,5 +1,10 @@
 "use strict";
 
+/**
+ * @param enemy
+ * @param game
+ */
+
 class EnemyAI {
   constructor(enemy, game) {
     this.enemy = enemy;
@@ -37,7 +42,7 @@ class EnemyAI {
         case this.checkLeftPlat(this.targetPlatform):
           if (this.enemy.x > (this.targetPlatform.x + this.targetPlatform.w + 30)) {
             this.enemy.goLeft = true;
-          } else if ((this.enemy.x + this.enemy.w) <= (this.targetPlatform.x + this.targetPlatform.w)) {
+          } else if ((this.enemy.x + this.enemy.w + this.enemy.xv / this.enemy.horizontalBraking) <= (this.targetPlatform.x + this.targetPlatform.w)) {
             this.enemy.goLeft = false;
             this.enemy.jump = false;
           } else if ((this.enemy.y + this.enemy.h) < this.targetPlatform.y) {
@@ -50,7 +55,7 @@ class EnemyAI {
         case this.checkRightPlat(this.targetPlatform):
           if ((this.enemy.x + this.enemy.w) < (this.targetPlatform.x - 30)) {
             this.enemy.goRight = true;
-          } else if (this.enemy.x >= this.targetPlatform.x) {
+          } else if ((this.enemy.x + this.enemy.xv / this.enemy.horizontalBraking) >= this.targetPlatform.x) {
             this.enemy.goRight = false;
             this.enemy.jump = false;
           } else if ((this.enemy.y + this.enemy.h) < this.targetPlatform.y) {
