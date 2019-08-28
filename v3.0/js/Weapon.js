@@ -32,6 +32,9 @@ class Weapon extends GameObject {
     });
 
     this.bullets = this.bullets.filter(bullet => !bullet.markedForDeletion);
+
+    if (this.currentRoundsInMagazine <= 0) this.reload(deltaTime);
+    if (this.currentRateOfFire > 0) this.currentRateOfFire -= deltaTime;
   }
 
   draw(ctx) {
@@ -40,14 +43,7 @@ class Weapon extends GameObject {
   }
 
   fire(deltaTime, xTarget, yTarget) {
-    if (this.currentRoundsInMagazine === 0) {
-      this.reload(deltaTime);
-      return;
-    }
-    if (this.currentRateOfFire > 0) {
-      this.currentRateOfFire -= deltaTime;
-      return;
-    }
+    if (this.currentRoundsInMagazine <= 0 || this.currentRateOfFire > 0) return;
 
     this.currentRateOfFire = this.rateOfFire;
     this.currentRoundsInMagazine--;
