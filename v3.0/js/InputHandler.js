@@ -45,8 +45,8 @@ class InputHandler {
 
     // Захват координат мыши
     window.addEventListener("mousemove", event => {
-      gameObject.clientY = event.clientY; // TODO: координаты не точные
-      gameObject.clientX = event.clientX; // TODO: координаты не точные
+      gameObject.clientY = event.clientY;
+      gameObject.clientX = event.clientX;
     });
   }
 }

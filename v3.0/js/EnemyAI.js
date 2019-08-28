@@ -1,11 +1,16 @@
 "use strict";
 
+/**
+ * @param enemy
+ * @param game
+ */
+
 class EnemyAI {
   constructor(enemy, game) {
     this.enemy = enemy;
     this.game = game;
 
-    this.maxJumpHeight = (this.enemy.jumpForce * this.enemy.jumpForce * 0.99) / (2 * this.game.gravity);
+    this.maxJumpHeight = (this.enemy.jumpForce * this.enemy.jumpForce * 0.98) / (2 * this.game.gravity);
     this.targetPlatform = null;
     this.beforeLastBottomCollidePlatform = this.enemy.lastBottomCollidePlatform;
     this.isJumping = false;
@@ -34,10 +39,14 @@ class EnemyAI {
 
 
       switch (true) {
-        case this.checkLeftPlat(this.targetPlatform):
-          if (this.enemy.x > (this.targetPlatform.x + this.targetPlatform.w + 30)) {
+        case ((this.targetPlatform.x + this.targetPlatform.w) < this.enemy.x ||
+            (this.targetPlatform.x < this.enemy.x &&
+                (this.enemy.y + this.enemy.h) < this.targetPlatform.y)):
+          if (this.enemy.x > (this.targetPlatform.x + this.targetPlatform.w +
+              this.enemy.xv / this.enemy.horizontalBraking + 10)) {
             this.enemy.goLeft = true;
-          } else if ((this.enemy.x + this.enemy.w) <= (this.targetPlatform.x + this.targetPlatform.w)) {
+          } else if ((this.enemy.x + this.enemy.w + this.enemy.xv / this.enemy.horizontalBraking) <=
+              (this.targetPlatform.x + this.targetPlatform.w)) {
             this.enemy.goLeft = false;
             this.enemy.jump = false;
           } else if ((this.enemy.y + this.enemy.h) < this.targetPlatform.y) {
@@ -47,10 +56,14 @@ class EnemyAI {
           }
           break;
 
-        case this.checkRightPlat(this.targetPlatform):
-          if ((this.enemy.x + this.enemy.w) < (this.targetPlatform.x - 30)) {
+        case (this.targetPlatform.x > (this.enemy.x + this.enemy.w) ||
+            ((this.targetPlatform.x + this.targetPlatform.w) > (this.enemy.x + this.enemy.w) &&
+                (this.enemy.y + this.enemy.h) < this.targetPlatform.y)):
+          if ((this.enemy.x + this.enemy.w) < (this.targetPlatform.x -
+              this.enemy.xv / this.enemy.horizontalBraking - 10)) {
             this.enemy.goRight = true;
-          } else if (this.enemy.x >= this.targetPlatform.x) {
+          } else if ((this.enemy.x + this.enemy.xv / this.enemy.horizontalBraking) >=
+              this.targetPlatform.x) {
             this.enemy.goRight = false;
             this.enemy.jump = false;
           } else if ((this.enemy.y + this.enemy.h) < this.targetPlatform.y) {
@@ -73,22 +86,31 @@ class EnemyAI {
 
       if ((this.enemy.x + this.enemy.w) < this.game.hero.x) {
 
-        if ((this.enemy.x + this.enemy.w + this.enemy.xv / this.enemy.horizontalBraking) < (this.enemy.lastBottomCollidePlatform.x + this.enemy.lastBottomCollidePlatform.w)) {
-          this.enemy.goRight = true;
+        if ((this.enemy.x + this.enemy.w + this.enemy.xv / this.enemy.horizontalBraking) <
+            (this.enemy.lastBottomCollidePlatform.x + this.enemy.lastBottomCollidePlatform.w)) {
+          this.targetPlatform = this.getPlatform("right");
+          if (!this.targetPlatform || this.targetPlatform.y > this.enemy.lastBottomCollidePlatform.y) {
+            this.targetPlatform = null;
+            this.enemy.goRight = true;
+          }
         } else {
           this.targetPlatform = this.getPlatform("right");
-          this.beforeLastBottomCollidePlatform = this.enemy.lastBottomCollidePlatform;
         }
 
       } else if (this.enemy.x > (this.game.hero.x + this.game.hero.w)) {
 
-        if ((this.enemy.x + this.enemy.xv / this.enemy.horizontalBraking) > this.enemy.lastBottomCollidePlatform.x) {
-          this.enemy.goLeft = true;
+        if ((this.enemy.x + this.enemy.xv / this.enemy.horizontalBraking) >
+            this.enemy.lastBottomCollidePlatform.x) {
+          this.targetPlatform = this.getPlatform("left");
+          if (!this.targetPlatform || this.targetPlatform.y > this.enemy.lastBottomCollidePlatform.y) {
+            this.targetPlatform = null;
+            this.enemy.goLeft = true;
+          }
         } else {
           this.targetPlatform = this.getPlatform("left");
-          this.beforeLastBottomCollidePlatform = this.enemy.lastBottomCollidePlatform;
         }
       }
+      this.beforeLastBottomCollidePlatform = this.enemy.lastBottomCollidePlatform;
     }
   }
 
@@ -116,7 +138,7 @@ class EnemyAI {
   }
 
   checkRightPlat(p) {
-    const distance = p.x - (this.enemy.lastBottomCollidePlatform.x + this.enemy.lastBottomCollidePlatform.w);
+    const distance = p.x - (this.enemy.x + this.enemy.w);
     const height = -p.y + this.enemy.lastBottomCollidePlatform.y;
 
     return (distance > 0 &&
@@ -126,7 +148,7 @@ class EnemyAI {
   }
 
   checkLeftPlat(p) {
-    const distance = this.enemy.lastBottomCollidePlatform.x - (p.x + p.w);
+    const distance = this.enemy.x - (p.x + p.w);
     const height = -p.y + this.enemy.lastBottomCollidePlatform.y;
 
     return (distance > 0 &&
