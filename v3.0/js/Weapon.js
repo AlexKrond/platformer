@@ -18,11 +18,13 @@ class Weapon extends GameObject {
     this.currentReloadTime = this.reloadTime;
 
     this.bullets = [];
+    this.xTarget = null;
+    this.yTarget = null;
   }
 
   update(deltaTime) {
     this.x = this.owner.x + this.owner.w / 2;
-    this.y = this.owner.y + this.owner.h / 2 - this.h / 2;
+    this.y = this.owner.y + this.owner.h / 2;
 
     this.bullets.forEach(bullet => {
       bullet.markForDeletion();
@@ -38,11 +40,27 @@ class Weapon extends GameObject {
   }
 
   draw(ctx) {
-    super.draw(ctx);
+    let angle;
+    if (!this.xTarget || !this.yTarget) {
+      angle = 0;
+    } else {
+      angle = Math.atan2(this.yTarget - this.y, this.xTarget - this.x);
+    }
+    ctx.fillStyle = this.color;
+
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(angle);
+    ctx.fillRect(0, -this.h / 2, this.w, this.h / 2);
+    ctx.fillRect(0, 0, this.w, this.h / 2);
+    ctx.restore();
+
     this.bullets.forEach(bullet => bullet.draw(ctx));
   }
 
   fire(deltaTime, xTarget, yTarget) {
+    this.xTarget = xTarget;
+    this.yTarget = yTarget;
     if (this.currentRoundsInMagazine <= 0 || this.currentRateOfFire > 0) return;
 
     this.currentRateOfFire = this.rateOfFire;
