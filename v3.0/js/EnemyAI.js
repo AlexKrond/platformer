@@ -11,6 +11,7 @@ class EnemyAI {
     this.game = game;
 
     this.maxJumpHeight = (this.enemy.jumpForce * this.enemy.jumpForce * 0.98) / (2 * this.game.gravity);
+    this.xForMaxY = this.getXForMaxY();
     this.targetPlatform = null;
     this.beforeLastBottomCollidePlatform = this.enemy.lastBottomCollidePlatform;
     this.isJumping = false;
@@ -129,7 +130,7 @@ class EnemyAI {
     }
 
     this.game.platforms.forEach(p => {
-      if (check(p)) {
+      if (p !== this.enemy.lastBottomCollidePlatform && check(p)) {
         platform = platform ? ((p.y < platform.y) ? p : platform) : p;
       }
     });
@@ -138,23 +139,21 @@ class EnemyAI {
   }
 
   checkRightPlat(p) {
-    const distance = p.x - (this.enemy.x + this.enemy.w);
+    const x = p.x - (this.enemy.x + this.enemy.w / 2);
     const height = -p.y + this.enemy.lastBottomCollidePlatform.y;
 
-    return (distance > 0 &&
-        distance < 300 &&
-        height < this.maxJumpHeight &&
-        p.y > 0)
+    return (x > 0 && height < this.maxJumpHeight && p.y > 0 &&
+        (p.y >= (this.enemy.lastBottomCollidePlatform.y - this.motionEquation(x)) ||
+            x <= this.xForMaxY));
   }
 
   checkLeftPlat(p) {
-    const distance = this.enemy.x - (p.x + p.w);
+    const x = (this.enemy.x + this.enemy.w / 2) - (p.x + p.w);
     const height = -p.y + this.enemy.lastBottomCollidePlatform.y;
 
-    return (distance > 0 &&
-        distance < 300 &&
-        height < this.maxJumpHeight &&
-        p.y > 0)
+    return (x > 0 && height < this.maxJumpHeight && p.y > 0 &&
+        (p.y >= (this.enemy.lastBottomCollidePlatform.y - this.motionEquation(x)) ||
+            x <= this.xForMaxY));
   }
 
   motionEquation(x) {
@@ -187,6 +186,17 @@ class EnemyAI {
     }
 
     return {x1, x2};
+  }
+
+  getXForMaxY() {
+    let y = -1,
+        prevY = -2,
+        x;
+    for (x = 0; y > prevY; x++) {
+      prevY = y;
+      y = this.motionEquation(x);
+    }
+    return x;
   }
 }
 
