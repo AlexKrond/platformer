@@ -171,7 +171,7 @@ class Game {
       this.lastSpawnPlatformDist += 200;
     }
 
-    if (Math.random() < this.bonusSpawnFrequency) { // TODO: привязать к deltaTime, чтобы спавн был одинаков при разных FPS
+    if (Math.random() < this.bonusSpawnFrequency * (deltaTime / (1 / 60))) {
       this.bonuses.push(
           new Bonus({
             x: Math.random() * (this.width - this.hero.w),
