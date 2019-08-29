@@ -156,6 +156,38 @@ class EnemyAI {
         height < this.maxJumpHeight &&
         p.y > 0)
   }
+
+  motionEquation(x) {
+    let t = EnemyAI.getMaxRootOfTheQuadraticEquation({
+      a: this.enemy.acceleration / 2,
+      b: this.enemy.startSpeed,
+      c: -x
+    });
+
+    if ((this.enemy.acceleration * t * t) / 2 > (this.enemy.maxSpeed - this.enemy.startSpeed)) {
+      t = (x - this.enemy.maxSpeed + this.enemy.startSpeed) / this.enemy.startSpeed;
+    }
+
+    return this.enemy.jumpForce * t - (this.game.gravity * t * t) / 2;
+  }
+
+  static getMaxRootOfTheQuadraticEquation(params) {
+    const {x1, x2} = EnemyAI.solveQuadraticEquation(params);
+    return Math.max(x1, x2);
+  }
+
+  static solveQuadraticEquation({a, b, c}) {
+    let x1, x2;
+    let d = b * b - 4 * a * c;
+    if (d >= 0) {
+      x1 = (-b + Math.sqrt(d)) / (2 * a);
+      x2 = (-b - Math.sqrt(d)) / (2 * a);
+    } else {
+      throw new Error("Корни комплексные");
+    }
+
+    return {x1, x2};
+  }
 }
 
 export default EnemyAI
