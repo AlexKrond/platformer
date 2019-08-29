@@ -11,6 +11,7 @@ class EnemyAI {
     this.game = game;
 
     this.maxJumpHeight = (this.enemy.jumpForce * this.enemy.jumpForce * 0.98) / (2 * this.game.gravity);
+    this.xForMaxY = this.getXForMaxY();
     this.targetPlatform = null;
     this.beforeLastBottomCollidePlatform = this.enemy.lastBottomCollidePlatform;
     this.isJumping = false;
@@ -129,7 +130,7 @@ class EnemyAI {
     }
 
     this.game.platforms.forEach(p => {
-      if (check(p)) {
+      if (p !== this.enemy.lastBottomCollidePlatform && check(p)) {
         platform = platform ? ((p.y < platform.y) ? p : platform) : p;
       }
     });
@@ -138,23 +139,64 @@ class EnemyAI {
   }
 
   checkRightPlat(p) {
-    const distance = p.x - (this.enemy.x + this.enemy.w);
+    const x = p.x - (this.enemy.x + this.enemy.w / 2);
     const height = -p.y + this.enemy.lastBottomCollidePlatform.y;
 
-    return (distance > 0 &&
-        distance < 300 &&
-        height < this.maxJumpHeight &&
-        p.y > 0)
+    return (x > 0 && height < this.maxJumpHeight && p.y > 0 &&
+        (p.y >= (this.enemy.lastBottomCollidePlatform.y - this.motionEquation(x)) ||
+            x <= this.xForMaxY));
   }
 
   checkLeftPlat(p) {
-    const distance = this.enemy.x - (p.x + p.w);
+    const x = (this.enemy.x + this.enemy.w / 2) - (p.x + p.w);
     const height = -p.y + this.enemy.lastBottomCollidePlatform.y;
 
-    return (distance > 0 &&
-        distance < 300 &&
-        height < this.maxJumpHeight &&
-        p.y > 0)
+    return (x > 0 && height < this.maxJumpHeight && p.y > 0 &&
+        (p.y >= (this.enemy.lastBottomCollidePlatform.y - this.motionEquation(x)) ||
+            x <= this.xForMaxY));
+  }
+
+  motionEquation(x) {
+    let t = EnemyAI.getMaxRootOfTheQuadraticEquation({
+      a: this.enemy.acceleration / 2,
+      b: this.enemy.startSpeed,
+      c: -x
+    });
+
+    if ((this.enemy.acceleration * t * t) / 2 > (this.enemy.maxSpeed - this.enemy.startSpeed)) {
+      t = (x - this.enemy.maxSpeed + this.enemy.startSpeed) / this.enemy.startSpeed;
+    }
+
+    return this.enemy.jumpForce * t - (this.game.gravity * t * t) / 2;
+  }
+
+  static getMaxRootOfTheQuadraticEquation(params) {
+    const {x1, x2} = EnemyAI.solveQuadraticEquation(params);
+    return Math.max(x1, x2);
+  }
+
+  static solveQuadraticEquation({a, b, c}) {
+    let x1, x2;
+    let d = b * b - 4 * a * c;
+    if (d >= 0) {
+      x1 = (-b + Math.sqrt(d)) / (2 * a);
+      x2 = (-b - Math.sqrt(d)) / (2 * a);
+    } else {
+      throw new Error("Корни комплексные");
+    }
+
+    return {x1, x2};
+  }
+
+  getXForMaxY() {
+    let y = -1,
+        prevY = -2,
+        x;
+    for (x = 0; y > prevY; x++) {
+      prevY = y;
+      y = this.motionEquation(x);
+    }
+    return x;
   }
 }
 
