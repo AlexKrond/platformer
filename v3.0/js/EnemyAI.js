@@ -163,8 +163,10 @@ class EnemyAI {
       c: -x
     });
 
-    if ((this.enemy.acceleration * t * t) / 2 > (this.enemy.maxSpeed - this.enemy.startSpeed)) {
-      t = (x - this.enemy.maxSpeed + this.enemy.startSpeed) / this.enemy.startSpeed;
+    let tMaxSpeed = (this.enemy.maxSpeed - this.enemy.startSpeed) / this.enemy.acceleration;
+    if ((this.enemy.startSpeed + this.enemy.acceleration * t) >= this.enemy.maxSpeed) {
+      t = (x - this.enemy.startSpeed * tMaxSpeed - (this.enemy.acceleration * tMaxSpeed * tMaxSpeed) / 2) /
+          this.enemy.maxSpeed + tMaxSpeed;
     }
 
     return this.enemy.jumpForce * t - (this.game.gravity * t * t) / 2;
