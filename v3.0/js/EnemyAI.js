@@ -142,7 +142,7 @@ class EnemyAI {
     const x = p.x - (this.enemy.x + this.enemy.w / 2);
     const height = -p.y + this.enemy.lastBottomCollidePlatform.y;
 
-    return (x > 0 && height < this.maxJumpHeight && p.y > 0 &&
+    return (x > (this.enemy.w / 2) && height < this.maxJumpHeight && p.y > 0 &&
         (p.y >= (this.enemy.lastBottomCollidePlatform.y - this.motionEquation(x)) ||
             x <= this.xForMaxY));
   }
@@ -151,7 +151,7 @@ class EnemyAI {
     const x = (this.enemy.x + this.enemy.w / 2) - (p.x + p.w);
     const height = -p.y + this.enemy.lastBottomCollidePlatform.y;
 
-    return (x > 0 && height < this.maxJumpHeight && p.y > 0 &&
+    return (x > (this.enemy.w / 2) && height < this.maxJumpHeight && p.y > 0 &&
         (p.y >= (this.enemy.lastBottomCollidePlatform.y - this.motionEquation(x)) ||
             x <= this.xForMaxY));
   }
