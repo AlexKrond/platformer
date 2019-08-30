@@ -43,7 +43,7 @@ class EnemyAI {
         case ((this.targetPlatform.x + this.targetPlatform.w) < this.enemy.x ||
             (this.targetPlatform.x < this.enemy.x &&
                 (this.enemy.y + this.enemy.h) < this.targetPlatform.y)):
-          if (this.enemy.x > (this.targetPlatform.x + this.targetPlatform.w +
+          if (this.enemy.x > (this.targetPlatform.x + this.targetPlatform.w -
               this.enemy.xv / this.enemy.horizontalBraking + 10)) {
             this.enemy.goLeft = true;
           } else if ((this.enemy.x + this.enemy.w + this.enemy.xv / this.enemy.horizontalBraking) <=
@@ -90,7 +90,9 @@ class EnemyAI {
         if ((this.enemy.x + this.enemy.w + this.enemy.xv / this.enemy.horizontalBraking) <
             (this.enemy.lastBottomCollidePlatform.x + this.enemy.lastBottomCollidePlatform.w)) {
           this.targetPlatform = this.getPlatform("right");
-          if (!this.targetPlatform || this.targetPlatform.y > this.enemy.lastBottomCollidePlatform.y) {
+          if (!this.targetPlatform || this.targetPlatform.y > this.enemy.lastBottomCollidePlatform.y ||
+              this.targetPlatform.x > (this.enemy.lastBottomCollidePlatform.x +
+                  this.enemy.lastBottomCollidePlatform.w)) {
             this.targetPlatform = null;
             this.enemy.goRight = true;
           }
@@ -103,7 +105,8 @@ class EnemyAI {
         if ((this.enemy.x + this.enemy.xv / this.enemy.horizontalBraking) >
             this.enemy.lastBottomCollidePlatform.x) {
           this.targetPlatform = this.getPlatform("left");
-          if (!this.targetPlatform || this.targetPlatform.y > this.enemy.lastBottomCollidePlatform.y) {
+          if (!this.targetPlatform || this.targetPlatform.y > this.enemy.lastBottomCollidePlatform.y ||
+              (this.targetPlatform.x + this.targetPlatform.w) < this.enemy.lastBottomCollidePlatform.x) {
             this.targetPlatform = null;
             this.enemy.goLeft = true;
           }
