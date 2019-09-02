@@ -4,8 +4,12 @@ import Character from "./Character.js"
 import EnemyAI from "./EnemyAI.js"
 import Weapon from "./Weapon.js"
 import detectCollision from "./detectCollision.js"
+import SpriteState from "./SpriteState.js"
+import Sprite from "./Sprite.js"
 
 class Enemy extends Character {
+  static img = new Image();
+
   constructor(props, game) {
     super(props, game);
     this.health = 100;
@@ -18,6 +22,12 @@ class Enemy extends Character {
       collides: false,
       color: "red"
     }, this, game);
+
+    this.spriteStates = {
+      right: new SpriteState([0, 1, 2, 3, 4], 0, "cyclical"),
+      left: new SpriteState([5, 6, 7, 8, 9], 0, "cyclical")
+    };
+    this.sprite = new Sprite(162, 162, this.spriteStates.right, this, 60);
   }
 
   update(deltaTime) {
@@ -38,10 +48,13 @@ class Enemy extends Character {
     if (this.health <= 0) {
       this.markedForDeletion = true;
     }
+
+    this.spriteStateUpdate();
+    this.sprite.update(deltaTime);
   }
 
   draw(ctx) {
-    super.draw(ctx);
+    this.sprite.draw(ctx);
     this.weapon.draw(ctx);
 
     ctx.fillStyle = "red";
@@ -59,6 +72,11 @@ class Enemy extends Character {
         bullet.markedForDeletion = true;
       }
     });
+  }
+
+  spriteStateUpdate() {
+    if (this.xv < 0) this.sprite.currentState = this.spriteStates.left;
+    if (this.xv > 0) this.sprite.currentState = this.spriteStates.right;
   }
 }
 

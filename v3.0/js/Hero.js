@@ -3,6 +3,7 @@
 import Character from "./Character.js"
 import detectCollision from "./detectCollision.js"
 import Sprite from "./Sprite.js"
+import SpriteState from "./SpriteState.js"
 import Weapon from "./Weapon.js"
 
 class Hero extends Character {
@@ -13,7 +14,16 @@ class Hero extends Character {
     this.game = game;
     this.health = 100;
 
-    this.sprite = new Sprite({frameWidth: 200, frameHeight: 200}, this);
+    this.spriteStates = {
+      moveRight: new SpriteState([1, 2, 3, 4, 5], 0, "cyclical"),
+      standRight: new SpriteState([1], 0, "single"),
+      jumpRight: new SpriteState([0], 0, "single"),
+      jumpLeft: new SpriteState([6], 0, "single"),
+      standLeft: new SpriteState([7], 0, "single"),
+      moveLeft: new SpriteState([7, 8, 9, 10, 11], 0, "cyclical")
+    };
+    this.sprite = new Sprite(200, 200, this.spriteStates.standRight, this);
+    this.afterBottomCollisionTimer = 0;
 
     this.fire = false;
     this.clientX = null;
@@ -43,7 +53,8 @@ class Hero extends Character {
       this.weapon.fire(deltaTime, this.clientX - rect.left, this.clientY - rect.top);
     }
 
-    this.sprite.update(deltaTime, this.wasBottomCollision);
+    this.spriteStateUpdate(deltaTime);
+    this.sprite.update(deltaTime);
   }
 
   draw(ctx) {
@@ -78,6 +89,44 @@ class Hero extends Character {
         }
       });
     });
+  }
+
+  spriteStateUpdate(deltaTime) {
+    if (this.xv < 0) this.sprite.currentState = this.spriteStates.moveLeft;
+    if (this.xv > 0) this.sprite.currentState = this.spriteStates.moveRight;
+
+    if (this.xv === 0 || this.yv !== 0) {
+      switch (this.sprite.currentState) {
+        case this.spriteStates.moveLeft:
+        case this.spriteStates.jumpLeft:
+        case this.spriteStates.standLeft:
+          this.sprite.currentState = this.spriteStates.standLeft;
+          break;
+
+        case this.spriteStates.moveRight:
+        case this.spriteStates.jumpRight:
+        case this.spriteStates.standRight:
+          this.sprite.currentState = this.spriteStates.standRight;
+          break;
+      }
+    }
+
+    if (this.wasBottomCollision) this.afterBottomCollisionTimer = 0;
+    this.afterBottomCollisionTimer += 1000 * deltaTime;
+
+    if (!this.wasBottomCollision && this.afterBottomCollisionTimer > 200) {
+      switch (this.sprite.currentState) {
+        case this.spriteStates.moveLeft:
+        case this.spriteStates.standLeft:
+          this.sprite.currentState = this.spriteStates.jumpLeft;
+          break;
+
+        case this.spriteStates.moveRight:
+        case this.spriteStates.standRight:
+          this.sprite.currentState = this.spriteStates.jumpRight;
+          break;
+      }
+    }
   }
 }
 
