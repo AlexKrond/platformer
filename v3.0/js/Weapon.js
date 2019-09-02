@@ -2,8 +2,12 @@
 
 import GameObject from "./GameObject.js"
 import Bullet from "./Bullet.js"
+import SpriteState from "./SpriteState.js"
+import Sprite from "./Sprite.js"
 
 class Weapon extends GameObject {
+  static img = new Image();
+
   constructor(props, owner, game) {
     super(props, game);
     this.owner = owner;
@@ -20,6 +24,13 @@ class Weapon extends GameObject {
     this.bullets = [];
     this.xTarget = null;
     this.yTarget = null;
+    this.angle = 0;
+
+    this.spriteStates = {
+      right: new SpriteState([1], 0, "single"),
+      left: new SpriteState([0], 0, "single")
+    };
+    this.sprite = new Sprite(362, 145, this.spriteStates.right, this, 10);
   }
 
   update(deltaTime) {
@@ -37,25 +48,26 @@ class Weapon extends GameObject {
 
     if (this.currentRoundsInMagazine <= 0) this.reload(deltaTime);
     if (this.currentRateOfFire > 0) this.currentRateOfFire -= deltaTime;
+
+    this.spriteStateUpdate();
+    this.sprite.update(deltaTime);
   }
 
   draw(ctx) {
-    let angle;
     if (!this.xTarget || !this.yTarget) {
-      angle = 0;
+      this.angle = 0;
     } else {
-      angle = Math.atan2(this.yTarget - this.y, this.xTarget - this.x);
+      this.angle = Math.atan2(this.yTarget - this.y, this.xTarget - this.x);
     }
     ctx.fillStyle = this.color;
 
+    this.bullets.forEach(bullet => bullet.draw(ctx));
+
     ctx.save();
     ctx.translate(this.x, this.y);
-    ctx.rotate(angle);
-    ctx.fillRect(0, -this.h / 2, this.w, this.h / 2);
-    ctx.fillRect(0, 0, this.w, this.h / 2);
+    ctx.rotate(this.angle);
+    this.sprite.draw(ctx, -10, -this.h / 2);
     ctx.restore();
-
-    this.bullets.forEach(bullet => bullet.draw(ctx));
   }
 
   fire(deltaTime, xTarget, yTarget) {
@@ -89,6 +101,11 @@ class Weapon extends GameObject {
     if (this.currentReloadTime >= this.reloadTime) {
       this.currentRoundsInMagazine = this.maxRoundsInMagazine;
     }
+  }
+
+  spriteStateUpdate() {
+    if (Math.abs(this.angle) > Math.PI / 2) this.sprite.currentState = this.spriteStates.left;
+    if (Math.abs(this.angle) < Math.PI / 2) this.sprite.currentState = this.spriteStates.right;
   }
 }
 

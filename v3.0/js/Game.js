@@ -9,6 +9,7 @@ import Hero from "./Hero.js"
 import Bonus from "./Bonus.js"
 import Platform from "./Platform.js"
 import CrashedPlatform from "./СrashedPlatform.js"
+import Weapon from "./Weapon.js"
 
 class Game {
   constructor() {
@@ -48,6 +49,7 @@ class Game {
     Hero.img.src = "sprites/lama-spritesheet.png";
     Enemy.img.src = "sprites/bee-spritesheet.png";
     Bonus.img.src = "sprites/bonus.png";
+    Weapon.img.src = "sprites/weapon-spritesheet.png";
 
     this.hero = new Hero({
       x: this.width / 2 - c.hw / 2,
