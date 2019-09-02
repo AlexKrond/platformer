@@ -1,21 +1,14 @@
 "use strict";
 
 class Sprite {
-  constructor(props, gameObject) {
+  constructor({frameWidth, frameHeight, states}, gameObject) {
     this.gameObject = gameObject;
-
     this.img = gameObject.constructor.img;
-    this.frameWidth = props.frameWidth;
-    this.frameHeight = props.frameHeight;
 
-    this.states = {
-      moveRight: [1, 2, 3, 4, 5],
-      standRight: [1],
-      jumpRight: [0],
-      jumpLeft: [6],
-      standLeft: [7],
-      moveLeft: [7, 8, 9, 10, 11]
-    };
+    this.frameWidth = frameWidth;
+    this.frameHeight = frameHeight;
+
+    this.states = states;
 
     this.currentState = this.states.standRight;
     this.currentIndex = this.currentState[0];

@@ -3,6 +3,7 @@
 import Character from "./Character.js"
 import detectCollision from "./detectCollision.js"
 import Sprite from "./Sprite.js"
+import SpriteState from "./SpriteState.js"
 import Weapon from "./Weapon.js"
 
 class Hero extends Character {
@@ -13,7 +14,15 @@ class Hero extends Character {
     this.game = game;
     this.health = 100;
 
-    this.sprite = new Sprite({frameWidth: 200, frameHeight: 200}, this);
+    let spriteStates = {
+      moveRight: new SpriteState([1, 2, 3, 4, 5], 1, "12"),
+      standRight: new SpriteState([1], 1, "12"),
+      jumpRight: new SpriteState([0], 1, "12"),
+      jumpLeft: new SpriteState([6], 1, "12"),
+      standLeft: new SpriteState([7], 1, "12"),
+      moveLeft: new SpriteState([7, 8, 9, 10, 11], 1, "12")
+    };
+    this.sprite = new Sprite({frameWidth: 200, frameHeight: 200, spriteStates}, this);
 
     this.fire = false;
     this.clientX = null;
