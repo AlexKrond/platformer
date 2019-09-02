@@ -46,6 +46,7 @@ class Game {
     this.deathImg.src = "sprites/death.png";
 
     Hero.img.src = "sprites/lama-spritesheet.png";
+    Enemy.img.src = "sprites/bee-spritesheet.png";
     Bonus.img.src = "sprites/bonus.png";
 
     this.hero = new Hero({

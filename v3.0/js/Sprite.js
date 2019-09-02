@@ -1,28 +1,28 @@
 "use strict";
 
 class Sprite {
-  constructor(frameWidth, frameHeight, states, startState, gameObject) {
+  constructor(frameWidth, frameHeight, startState, gameObject, timeUpdate) {
     this.gameObject = gameObject;
     this.img = gameObject.constructor.img;
 
     this.frameWidth = frameWidth;
     this.frameHeight = frameHeight;
 
-    this.states = states;
-
     this.currentState = startState;
     this.currentColumn = this.currentState.columns[0];
 
-    this.lastState = null;
     this.isReversing = false;
 
-    this.gameObjectSpeedCoefficient = null;
+    this.timeUpdate = timeUpdate || null;
+    this.useSpeedCoefficient = !timeUpdate;
   }
 
   update(deltaTime) {
     if (!this.currentState) return;
 
-    this.gameObjectSpeedCoefficient = Math.abs(this.gameObject.xv) * 0.08;
+    if (this.useSpeedCoefficient) {
+      this.timeUpdate = Math.abs(this.gameObject.xv) * 0.08;
+    }
 
     switch (this.currentState.type) {
       case "single":
@@ -62,7 +62,7 @@ class Sprite {
   cyclicalUpdate(deltaTime) {
     this.currentColumn = this.getCurrentColumn();
 
-    this.currentColumn += this.gameObjectSpeedCoefficient * deltaTime;
+    this.currentColumn += this.timeUpdate * deltaTime;
 
     if (this.currentColumn >= this.currentState.columns[this.currentState.columns.length - 1] + 1) {
       this.currentColumn = this.currentState.columns[0];
@@ -73,14 +73,14 @@ class Sprite {
     this.currentColumn = this.getCurrentColumn();
 
     if (this.isReversing) {
-      this.currentColumn -= this.gameObjectSpeedCoefficient * deltaTime;
+      this.currentColumn -= this.timeUpdate * deltaTime;
 
       if (this.currentColumn < this.currentState.columns[0]) {
         this.currentColumn = this.currentState.columns[1] || this.currentState.columns[0];
         this.isReversing = false;
       }
     } else {
-      this.currentColumn += this.gameObjectSpeedCoefficient * deltaTime;
+      this.currentColumn += this.timeUpdate * deltaTime;
 
       if (this.currentColumn >= this.currentState.columns[this.currentState.columns.length - 1] + 1) {
         this.currentColumn = this.currentState.columns[this.currentState.columns.length - 1];

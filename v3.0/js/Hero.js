@@ -22,7 +22,7 @@ class Hero extends Character {
       standLeft: new SpriteState([7], 0, "single"),
       moveLeft: new SpriteState([7, 8, 9, 10, 11], 0, "cyclical")
     };
-    this.sprite = new Sprite(200, 200, this.spriteStates, this.spriteStates.standRight, this);
+    this.sprite = new Sprite(200, 200, this.spriteStates.standRight, this);
     this.afterBottomCollisionTimer = 0;
 
     this.fire = false;
