@@ -3,8 +3,8 @@
 const c = {
   gameWidth:                 document.documentElement.clientWidth - 50,
   gameHeight:                document.documentElement.clientHeight - 50,
-  // screenMoveSpeed:           30,
-  screenMoveSpeed:           0,
+  screenMoveSpeed:           30,
+  // screenMoveSpeed:           0,
   // bonusSpawnFrequency:       1,
   bonusSpawnFrequency:       0.007,
   // crashPlatformFrequency:    2,

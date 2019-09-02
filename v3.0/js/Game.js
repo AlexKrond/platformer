@@ -10,6 +10,7 @@ import Bonus from "./Bonus.js"
 import Platform from "./Platform.js"
 import CrashedPlatform from "./СrashedPlatform.js"
 import Weapon from "./Weapon.js"
+import Background from "./Background.js"
 
 class Game {
   constructor() {
@@ -50,6 +51,7 @@ class Game {
     Enemy.img.src = "sprites/bee-spritesheet.png";
     Bonus.img.src = "sprites/bonus.png";
     Weapon.img.src = "sprites/weapon-spritesheet.png";
+    Background.img.src = "sprites/bg.png";
 
     this.hero = new Hero({
       x: this.width / 2 - c.hw / 2,
@@ -125,6 +127,13 @@ class Game {
       }, this)
     ];
 
+    this.bg = new Background({
+      x: 0,
+      y: -3407 + this.height,
+      w: 1716,
+      h: 3407
+    }, this);
+
     for (let i = 0; i < (this.height / 200); i++) {
       Platform.spawnNew(this, i * 200 - 100);
     }
@@ -150,6 +159,7 @@ class Game {
 
     this.gameObjects = [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, ...this.enemies, this.hero];
 
+    this.bg.screenMoving(deltaTime); // TODO: удалять при выходе за нижнюю границу
     this.gameObjects.forEach(gameObject => gameObject.markForDeletion());
     this.gameObjects.forEach(gameObject => gameObject.screenMoving(deltaTime));
     this.gameObjects.forEach(gameObject => gameObject.gravityEffect(deltaTime));
@@ -202,10 +212,10 @@ class Game {
   }
 
   draw(ctx) {
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "rgb(51, 51, 102)";
     ctx.fillRect(0, 0, this.width, this.height);
 
-    [...this.crashedPlatforms, ...this.platforms, ...this.bonuses, ...this.enemies, this.hero].forEach(gameObject => {
+    [this.bg, ...this.crashedPlatforms, ...this.platforms, ...this.bonuses, ...this.enemies, this.hero].forEach(gameObject => {
       gameObject.draw(ctx);
     });
 
