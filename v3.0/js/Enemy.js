@@ -17,8 +17,8 @@ class Enemy extends Character {
     this.weapon = new Weapon({
       x: this.x + this.w / 2,
       y: this.y + this.h / 2,
-      w: 20,
-      h: 5,
+      w: 60,
+      h: 24,
       collides: false,
       color: "red"
     }, this, game);

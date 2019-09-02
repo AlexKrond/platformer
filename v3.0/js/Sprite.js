@@ -39,7 +39,7 @@ class Sprite {
     }
   }
 
-  draw(ctx) {
+  draw(ctx, x, y) {
     ctx.drawImage(
         this.img,
 
@@ -48,8 +48,8 @@ class Sprite {
         this.frameWidth,
         this.frameHeight,
 
-        this.gameObject.x,
-        this.gameObject.y,
+        x || this.gameObject.x,
+        y ||this.gameObject.y,
         this.gameObject.w,
         this.gameObject.h
     );

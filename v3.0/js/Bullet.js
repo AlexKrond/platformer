@@ -9,7 +9,7 @@ class Bullet extends GameObject {
 
     this.damage = 1;
 
-    this.w = 5;
+    this.w = 3;
     this.h = this.w;
   }
 
@@ -19,6 +19,13 @@ class Bullet extends GameObject {
         this.x > this.game.width) {
       this.markedForDeletion = true;
     }
+  }
+
+  draw(ctx) {
+    ctx.fillStyle = "#b87333";
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.w, 0, 2 * Math.PI);
+    ctx.fill();
   }
 }
 
