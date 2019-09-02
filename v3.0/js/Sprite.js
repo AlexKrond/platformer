@@ -1,7 +1,7 @@
 "use strict";
 
 class Sprite {
-  constructor({frameWidth, frameHeight, states}, gameObject) {
+  constructor(frameWidth, frameHeight, states, startState, gameObject) {
     this.gameObject = gameObject;
     this.img = gameObject.constructor.img;
 
@@ -10,74 +10,41 @@ class Sprite {
 
     this.states = states;
 
-    this.currentState = this.states.standRight;
-    this.currentIndex = this.currentState[0];
+    this.currentState = startState;
+    this.currentColumn = this.currentState.columns[0];
 
-    this.afterBottomCollisionCounter = 0;
+    this.lastState = null;
+    this.isReversing = false;
+
+    this.gameObjectSpeedCoefficient = null;
   }
 
-  update(deltaTime, wasBottomCollision) {
-    if (this.gameObject.xv < 0) {
-      this.currentState = this.states.moveLeft;
-      this.currentIndex = (this.currentIndex >= this.currentState[0] &&
-          this.currentIndex < this.currentState[this.currentState.length - 1] + 1) ?
-          this.currentIndex :
-          this.currentState[0];
-    }
+  update(deltaTime) {
+    if (!this.currentState) return;
 
-    if (this.gameObject.xv > 0) {
-      this.currentState = this.states.moveRight;
-      this.currentIndex = (this.currentIndex >= this.currentState[0] &&
-          this.currentIndex < this.currentState[this.currentState.length - 1] + 1) ?
-          this.currentIndex :
-          this.currentState[0];
-    }
+    this.gameObjectSpeedCoefficient = Math.abs(this.gameObject.xv) * 0.08;
 
-    if (this.gameObject.xv === 0 || this.gameObject.yv !== 0) {
-      if (this.currentState === this.states.moveLeft ||
-          this.currentState === this.states.jumpLeft ||
-          this.currentState === this.states.standLeft) {
-        this.currentState = this.states.standLeft;
-      }
+    switch (this.currentState.type) {
+      case "single":
+        this.singleUpdate();
+        break;
 
-      if (this.currentState === this.states.moveRight ||
-          this.currentState === this.states.jumpRight ||
-          this.currentState === this.states.standRight) {
-        this.currentState = this.states.standRight;
-      }
+      case "cyclical":
+        this.cyclicalUpdate(deltaTime);
+        break;
 
-      this.currentIndex = this.currentState[0];
-    }
-
-    if (wasBottomCollision) this.afterBottomCollisionCounter = 0;
-    this.afterBottomCollisionCounter += 1000 * deltaTime;
-
-    if (!wasBottomCollision && this.afterBottomCollisionCounter > 200) {
-      if (this.currentState === this.states.moveLeft || this.currentState === this.states.standLeft) {
-        this.currentState = this.states.jumpLeft;
-      }
-
-      if (this.currentState === this.states.moveRight || this.currentState === this.states.standRight) {
-        this.currentState = this.states.jumpRight;
-      }
-
-      this.currentIndex = this.currentState[0];
-    }
-
-    this.currentIndex += Math.abs(this.gameObject.xv) * 0.1 * deltaTime;
-    if (this.currentState &&
-        this.currentIndex >= this.currentState[this.currentState.length - 1] + 1) {
-      this.currentIndex = this.currentState[0];
+      case "reversibleCyclical":
+        this.reversibleCyclicalUpdate(deltaTime);
+        break;
     }
   }
 
   draw(ctx) {
-
     ctx.drawImage(
         this.img,
 
-        Math.floor(this.currentIndex) * this.frameWidth,
-        0,
+        Math.floor(this.currentColumn) * this.frameWidth,
+        this.currentState.row * this.frameHeight,
         this.frameWidth,
         this.frameHeight,
 
@@ -86,6 +53,47 @@ class Sprite {
         this.gameObject.w,
         this.gameObject.h
     );
+  }
+
+  singleUpdate() {
+    this.currentColumn = this.getCurrentColumn();
+  }
+
+  cyclicalUpdate(deltaTime) {
+    this.currentColumn = this.getCurrentColumn();
+
+    this.currentColumn += this.gameObjectSpeedCoefficient * deltaTime;
+
+    if (this.currentColumn >= this.currentState.columns[this.currentState.columns.length - 1] + 1) {
+      this.currentColumn = this.currentState.columns[0];
+    }
+  }
+
+  reversibleCyclicalUpdate(deltaTime) {
+    this.currentColumn = this.getCurrentColumn();
+
+    if (this.isReversing) {
+      this.currentColumn -= this.gameObjectSpeedCoefficient * deltaTime;
+
+      if (this.currentColumn < this.currentState.columns[0]) {
+        this.currentColumn = this.currentState.columns[1] || this.currentState.columns[0];
+        this.isReversing = false;
+      }
+    } else {
+      this.currentColumn += this.gameObjectSpeedCoefficient * deltaTime;
+
+      if (this.currentColumn >= this.currentState.columns[this.currentState.columns.length - 1] + 1) {
+        this.currentColumn = this.currentState.columns[this.currentState.columns.length - 1];
+        this.isReversing = true;
+      }
+    }
+  }
+
+  getCurrentColumn() {
+    return (this.currentColumn >= this.currentState.columns[0] &&
+        this.currentColumn < this.currentState.columns[this.currentState.columns.length - 1] + 1) ?
+        this.currentColumn :
+        this.currentState.columns[0];
   }
 }
 
