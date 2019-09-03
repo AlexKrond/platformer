@@ -48,10 +48,10 @@ class Hero extends Character {
 
     super.updatePosition(deltaTime);
 
-    this.weapon.update(deltaTime);
+    let rect = this.game.canvas.getBoundingClientRect();
+    this.weapon.update(deltaTime, this.clientX - rect.left, this.clientY - rect.top);
     if (this.fire) {
-      let rect = this.game.canvas.getBoundingClientRect();
-      this.weapon.fire(deltaTime, this.clientX - rect.left, this.clientY - rect.top);
+      this.weapon.fire(deltaTime);
     }
 
     this.spriteStateUpdate(deltaTime);
