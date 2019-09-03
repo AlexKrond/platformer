@@ -127,11 +127,13 @@ class Game {
       }, this)
     ];
 
+    const bgW = Background.img.width;
+    const bgH = Background.img.height;
     this.bg = new Background({
-      x: 0,
-      y: -3407 + this.height,
-      w: 1716,
-      h: 3407
+      x: -(bgW - this.width) / 2,
+      y: -bgH + this.height,
+      w: bgW,
+      h: bgH
     }, this);
 
     for (let i = 0; i < (this.height / 200); i++) {

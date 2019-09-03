@@ -6,6 +6,8 @@ class Background {
   static img = new Image();
 
   constructor({x, y, w, h}, game) {
+    this.game = game;
+
     this.x = x;
     this.y = y;
     this.w = w;
@@ -17,7 +19,7 @@ class Background {
   }
 
   draw(ctx) {
-    ctx.drawImage(Background.img, this.x, this.y, this.w, this.h);
+    ctx.drawImage(Background.img, -this.x, -this.y, this.game.width, this.game.height, 0, 0, this.game.width, this.game.height);
   }
 }
 
