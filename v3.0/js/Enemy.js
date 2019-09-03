@@ -46,6 +46,7 @@ class Enemy extends Character {
     }
 
     if (this.health <= 0) {
+      this.game.bonusScore += 1000;
       this.markedForDeletion = true;
     }
 

@@ -19,8 +19,8 @@ const c = {
   bounce:                    0.78,
   nullifyBounce:             50,
   gravity:                   500,
-  hw:                        48,
-  hh:                        48
+  hw:                        64,
+  hh:                        64
 };
 
 export default c

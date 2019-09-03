@@ -17,6 +17,7 @@ class Weapon extends GameObject {
     this.maxRoundsInMagazine = 10;
     this.rateOfFire = 0.3;
     this.reloadTime = 5;
+    this.bulletDamage = props.bulletDamage || 1;
     this.currentRoundsInMagazine = this.maxRoundsInMagazine;
     this.currentRateOfFire = this.rateOfFire;
     this.currentReloadTime = this.reloadTime;
@@ -90,7 +91,8 @@ class Weapon extends GameObject {
           yv: yBulletSpeed / factor,
           collides: true,
           gravityIsUsed: true,
-          color: "green"
+          color: "green",
+          damage: this.bulletDamage
         }, this.owner, this.game)
     );
   }

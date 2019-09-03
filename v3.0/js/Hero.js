@@ -34,7 +34,8 @@ class Hero extends Character {
       w: 60,
       h: 24,
       collides: false,
-      color: "red"
+      color: "red",
+      bulletDamage: 5
     }, this, this.game);
   }
 
