@@ -7,7 +7,7 @@ class Bullet extends GameObject {
     super(props, game);
     this.owner = owner;
 
-    this.damage = 1;
+    this.damage = props.damage;
 
     this.w = 3;
     this.h = this.w;
