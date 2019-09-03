@@ -34,7 +34,9 @@ class Weapon extends GameObject {
     this.sprite = new Sprite(362, 145, this.spriteStates.right, this, 10);
   }
 
-  update(deltaTime) {
+  update(deltaTime, xTarget, yTarget) {
+    this.xTarget = xTarget;
+    this.yTarget = yTarget;
     this.x = this.owner.x + this.owner.w / 2;
     this.y = this.owner.y + this.owner.h / 2;
 
@@ -71,16 +73,14 @@ class Weapon extends GameObject {
     ctx.restore();
   }
 
-  fire(deltaTime, xTarget, yTarget) {
-    this.xTarget = xTarget;
-    this.yTarget = yTarget;
+  fire(deltaTime) {
     if (this.currentRoundsInMagazine <= 0 || this.currentRateOfFire > 0) return;
 
     this.currentRateOfFire = this.rateOfFire;
     this.currentRoundsInMagazine--;
 
-    let xBulletSpeed = xTarget - this.x;
-    let yBulletSpeed = yTarget - this.y;
+    let xBulletSpeed = this.xTarget - this.x;
+    let yBulletSpeed = this.yTarget - this.y;
     let bulletSpeed = Math.sqrt(xBulletSpeed * xBulletSpeed + yBulletSpeed * yBulletSpeed);
     let factor = bulletSpeed / this.bulletsSpeed;
     this.bullets.push(
