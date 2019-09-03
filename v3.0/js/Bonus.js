@@ -8,6 +8,15 @@ class Bonus extends GameObject {
 
   constructor(props, game) {
     super(props, game);
+
+    this.frameWidth = 200;
+    this.frameHeight = 200;
+
+    this.spriteState = {
+      aidKit: [0, 0],
+      coin: [1, 0]
+    };
+    this.currentSpriteState = null;
   }
 
   update(deltaTime) {
@@ -28,7 +37,19 @@ class Bonus extends GameObject {
   }
 
   draw(ctx) {
-    ctx.drawImage(Bonus.img, 50, 50, 100, 100, this.x, this.y, this.w, this.h);
+    ctx.drawImage(
+        Bonus.img,
+
+        this.currentSpriteState[0] * this.frameWidth,
+        this.currentSpriteState[1] * this.frameHeight,
+        this.frameWidth,
+        this.frameHeight,
+
+        this.x,
+        this.y,
+        this.w,
+        this.h
+    );
   }
 
   rebound(platform) {

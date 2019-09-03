@@ -11,6 +11,8 @@ import Platform from "./Platform.js"
 import CrashedPlatform from "./СrashedPlatform.js"
 import Weapon from "./Weapon.js"
 import Background from "./Background.js"
+import Coin from "./Coin.js"
+import AidKit from "./AidKit.js"
 
 class Game {
   constructor() {
@@ -30,7 +32,8 @@ class Game {
     this.screenMoveSpeed = c.screenMoveSpeed;
 
     this.crashPlatformFrequency = c.crashPlatformFrequency;
-    this.bonusSpawnFrequency = c.bonusSpawnFrequency;
+    this.coinSpawnFrequency = c.coinSpawnFrequency;
+    this.aidKitSpawnFrequency = c.aidKitSpawnFrequency;
     this.bounce = c.bounce;
     this.nullifyBounce = c.nullifyBounce;
     this.gravity = c.gravity;
@@ -49,7 +52,7 @@ class Game {
 
     Hero.img.src = "sprites/lama-spritesheet.png";
     Enemy.img.src = "sprites/bee-spritesheet.png";
-    Bonus.img.src = "sprites/bonus.png";
+    Bonus.img.src = "sprites/bonus-spritesheet.png";
     Weapon.img.src = "sprites/weapon-spritesheet.png";
     Background.img.src = "sprites/bg.png";
 
@@ -186,9 +189,22 @@ class Game {
       this.lastSpawnPlatformDist += 200;
     }
 
-    if (Math.random() < this.bonusSpawnFrequency * (deltaTime / (1 / 60))) {
+    if (Math.random() < this.coinSpawnFrequency * (deltaTime / (1 / 60))) {
       this.bonuses.push(
-          new Bonus({
+          new Coin({
+            x: Math.random() * (this.width - this.hero.w),
+            y: Math.random() * (this.height / 2 + 50) - 50,
+            w: 32,
+            h: 32,
+            color: "gold",
+            gravityIsUsed: true
+          }, this)
+      );
+    }
+
+    if (this.hero.health < 90 && Math.random() < this.aidKitSpawnFrequency * (deltaTime / (1 / 60))) {
+      this.bonuses.push(
+          new AidKit({
             x: Math.random() * (this.width - this.hero.w),
             y: Math.random() * (this.height / 2 + 50) - 50,
             w: 32,
