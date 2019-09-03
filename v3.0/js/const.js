@@ -1,8 +1,8 @@
 "use strict";
 
 const c = {
-  gameWidth:                 document.documentElement.clientWidth - 50,
-  gameHeight:                document.documentElement.clientHeight - 50,
+  gameWidth:                 document.documentElement.clientWidth,
+  gameHeight:                document.documentElement.clientHeight,
   screenMoveSpeed:           30,
   // screenMoveSpeed:           0,
   // bonusSpawnFrequency:       1,
