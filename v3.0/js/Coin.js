@@ -23,6 +23,10 @@ class Coin extends Bonus {
         this.h
     );
   }
+
+  applyEffect() {
+    this.game.bonusScore += 100;
+  }
 }
 
 export default Coin

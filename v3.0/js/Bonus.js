@@ -62,6 +62,10 @@ class Bonus extends GameObject {
       }
     }
   }
+
+  applyEffect() {
+    throw new Error("Не реализовано");
+  }
 }
 
 export default Bonus

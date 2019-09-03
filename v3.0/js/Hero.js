@@ -72,7 +72,7 @@ class Hero extends Character {
       const collideSide = detectCollision(this, bonus, deltaTime);
 
       if (collideSide !== "none") {
-        this.game.bonusScore += 100;
+        bonus.applyEffect();
         bonus.markedForDeletion = true;
       }
     });
