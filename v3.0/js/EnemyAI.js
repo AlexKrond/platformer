@@ -113,6 +113,8 @@ class EnemyAI {
     this.enemy.goRight = false;
     this.enemy.jump = false;
 
+    // TODO: фильтровать платформы const plats = this.game.platforms.filter(...)
+
     if ((this.enemy.x + this.enemy.w) < this.game.hero.x) {
 
       if ((this.enemy.x + this.enemy.w + this.enemy.xv / this.enemy.horizontalBraking) <
