@@ -3,8 +3,8 @@
 const c = {
   gameWidth:                 document.documentElement.clientWidth,
   gameHeight:                document.documentElement.clientHeight,
-  screenMoveSpeed:           30,
-  // screenMoveSpeed:           0,
+  // screenMoveSpeed:           30,
+  screenMoveSpeed:           0,
   // bonusSpawnFrequency:       1,
   coinSpawnFrequency:       0.007,
   aidKitSpawnFrequency:       0.0006,
