@@ -110,10 +110,11 @@ class Game {
 
       // Начальная платформа для игрока
       new Platform({
-        // x: this.width / 2 - 100,
-        x: -100,
+        x: this.width / 2 - 100,
+        // x: -100,
         y: this.height - 100,
-        w: this.width + 200,
+        // w: this.width + 200,
+        w: 200,
         h: 30,
         color: "black"
       }, this)

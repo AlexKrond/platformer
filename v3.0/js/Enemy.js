@@ -30,6 +30,10 @@ class Enemy extends Character {
     this.sprite = new Sprite(162, 162, this.spriteStates.right, this, 60);
   }
 
+  onlySuperUpdate(deltaTime) {
+    super.update(deltaTime);
+  }
+
   update(deltaTime) {
     this.AI.update();
     super.update(deltaTime);

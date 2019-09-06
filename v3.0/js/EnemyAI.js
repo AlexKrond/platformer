@@ -1,7 +1,6 @@
 "use strict";
 
 import Enemy from "./Enemy.js"
-import c from "./const.js";
 
 /**
  * @param enemy
@@ -54,11 +53,12 @@ class EnemyAI {
     this.enemy.goLeft = false;
     this.enemy.goRight = false;
 
-    if ((this.enemy.x + this.enemy.xv / this.enemy.horizontalBraking) > this.xPosForJumpToTheTP + 3) {
+    if ((this.enemy.x + this.enemy.xv / this.enemy.horizontalBraking) > this.xPosForJumpToTheTP + 5) {
       this.enemy.goLeft = true;
-    } else if ((this.enemy.x + this.enemy.xv / this.enemy.horizontalBraking) < this.xPosForJumpToTheTP - 3) {
+    } else if ((this.enemy.x + this.enemy.xv / this.enemy.horizontalBraking) < this.xPosForJumpToTheTP - 5) {
       this.enemy.goRight = true;
     } else {
+      this.enemy.x = this.xPosForJumpToTheTP - this.enemy.xv / this.enemy.horizontalBraking;
       this.xPosForJumpToTheTP = null;
     }
   }
@@ -129,38 +129,42 @@ class EnemyAI {
 
     let xMin = this.enemy.lastBottomCollidePlatform.x - this.enemy.w + 10;
     let xMax = this.enemy.lastBottomCollidePlatform.x + this.enemy.lastBottomCollidePlatform.w - 10;
-    let tmpPlat;
 
     if ((this.enemy.x + this.enemy.w) < this.game.hero.x) {
 
-      for (let x = xMax; x >= xMin; x -= 5) {
-        tmpPlat = this.getPlatform(plats, x, "right");
-        if (tmpPlat) {
-          if (this.targetPlatform) {
-            if (tmpPlat.y < this.targetPlatform.y) {
-              this.targetPlatform = tmpPlat;
-              this.xPosForJumpToTheTP = x;
-            }
-          } else {
-            this.targetPlatform = tmpPlat;
-            this.xPosForJumpToTheTP = x;
-          }
-        }
-      }
+      this.findRightTP(plats, xMin, xMax);
+      if (!this.targetPlatform) this.findLeftTP(plats, xMin, xMax);
 
     } else if (this.enemy.x > (this.game.hero.x + this.game.hero.w)) {
 
-      for (let x = xMin; x <= xMax; x += 5) {
-        this.targetPlatform = this.getPlatform(plats, x, "left");
-
-        if (this.targetPlatform) {
-          this.xPosForJumpToTheTP = x;
-          break;
-        }
-      }
+      this.findLeftTP(plats, xMin, xMax);
+      if (!this.targetPlatform) this.findRightTP(plats, xMin, xMax);
 
     }
+
     this.beforeLastBottomCollidePlatform = this.enemy.lastBottomCollidePlatform;
+  }
+
+  findRightTP(plats, xMin, xMax) {
+    for (let x = xMax; x >= xMin; x -= 5) {
+      this.targetPlatform = this.getPlatform(plats, x, "right");
+
+      if (this.targetPlatform) {
+        this.xPosForJumpToTheTP = x;
+        break;
+      }
+    }
+  }
+
+  findLeftTP(plats, xMin, xMax) {
+    for (let x = xMin; x <= xMax; x += 5) {
+      this.targetPlatform = this.getPlatform(plats, x, "left");
+
+      if (this.targetPlatform) {
+        this.xPosForJumpToTheTP = x;
+        break;
+      }
+    }
   }
 
   getPlatform(plats, xPos, side) {
@@ -177,55 +181,58 @@ class EnemyAI {
         throw new Error(`Неправильная сторона. side=${side}`);
     }
 
-    plats.forEach(p => {
-      if (p !== this.enemy.lastBottomCollidePlatform && check(p, xPos)) {
-        platform = platform ? ((p.y < platform.y) ? p : platform) : p;
+    for (let i = plats.length - 1; i >= 0; i--) {
+      if (plats[i] !== this.enemy.lastBottomCollidePlatform && check(plats[i], xPos)) {
+        platform = platform ? ((plats[i].y < platform.y) ? plats[i] : platform) : plats[i];
       }
-    });
+    }
 
     return platform;
   }
 
-  // TODO: создать теневую копию противника и проверить допрыгнет или нет
   checkRightPlat(p, xPos) {
     const x = p.x - (xPos + this.enemy.w - 5);
     const height = -p.y + this.enemy.lastBottomCollidePlatform.y;
 
-    return (p.y <= this.enemy.lastBottomCollidePlatform.y && // пока только платформы выше текущей
-        x > 0 && height < this.maxJumpHeight && p.y > 0 &&
-        (p.y >= (this.enemy.lastBottomCollidePlatform.y - this.motionEquation(x)) ||
-            x <= this.xForMaxJumpHeight) && this.checkJumpOnShadowCopy(p, xPos));
+    return (x > 0 && height < this.maxJumpHeight && p.y > 0 &&
+        (p.y > (this.enemy.lastBottomCollidePlatform.y - this.motionEquation(x)) ||
+            x < this.xForMaxJumpHeight) && this.checkJumpOnShadowCopy(p, xPos));
   }
 
   checkLeftPlat(p, xPos) {
     const x = (xPos + 5) - (p.x + p.w);
     const height = -p.y + this.enemy.lastBottomCollidePlatform.y;
 
-    return (p.y <= this.enemy.lastBottomCollidePlatform.y &&
-        x > 0 && height < this.maxJumpHeight && p.y > 0 &&
-        (p.y >= (this.enemy.lastBottomCollidePlatform.y - this.motionEquation(x)) ||
-            x <= this.xForMaxJumpHeight));
+    return (x > 0 && height < this.maxJumpHeight && p.y > 0 &&
+        (p.y > (this.enemy.lastBottomCollidePlatform.y - this.motionEquation(x)) ||
+            x < this.xForMaxJumpHeight) && this.checkJumpOnShadowCopy(p, xPos));
   }
 
+  // Проверка прыжка на целевую платформу с помощью теневой копии противника
   checkJumpOnShadowCopy(tp, xPos) {
     let shadowCopy = new Enemy({
-      x: xPos,
+      x: this.enemy.x,
       y: this.enemy.y,
       w: this.enemy.w,
       h: this.enemy.h,
-      xv: 0,
-      yv: 0,
+      xv: this.enemy.xv,
+      yv: this.enemy.yv,
       gravityIsUsed: true
     }, this.game);
 
     shadowCopy.AI.targetPlatform = tp;
+    shadowCopy.AI.xPosForJumpToTheTP = xPos;
     shadowCopy.lastBottomCollidePlatform = this.enemy.lastBottomCollidePlatform;
     shadowCopy.AI.beforeLastBottomCollidePlatform = shadowCopy.lastBottomCollidePlatform;
 
-    while (true) {
+    const deltaTime = 1/ 20;
+    let timeForJump = 5;
+
+    while (timeForJump > 0) {
       shadowCopy.markForDeletion();
-      shadowCopy.gravityEffect(1 / 60);
-      shadowCopy.update(1 / 60);
+      shadowCopy.gravityEffect(deltaTime);
+      shadowCopy.AI.update();
+      shadowCopy.onlySuperUpdate(deltaTime);
 
       if (shadowCopy.lastBottomCollidePlatform === tp) {
         shadowCopy = null;
@@ -236,7 +243,11 @@ class EnemyAI {
         shadowCopy = null;
         return false;
       }
+
+      timeForJump -= deltaTime;
     }
+
+    return false;
   }
 
   // Функция описывающая траекторию движения при прыжке
