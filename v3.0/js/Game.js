@@ -3,19 +3,15 @@
 import c from "./const.js"
 import InputHandler from "./InputHandler.js"
 import InputHandlerGameState from "./InputHandlerGameState.js"
-import Character from "./Character.js"
 import Enemy from "./Enemy.js"
 import Hero from "./Hero.js"
-import Bonus from "./Bonus.js"
 import Platform from "./Platform.js"
-import CrashedPlatform from "./СrashedPlatform.js"
-import Weapon from "./Weapon.js"
 import Background from "./Background.js"
 import Coin from "./Coin.js"
 import AidKit from "./AidKit.js"
 
 class Game {
-  constructor() {
+  constructor(res) {
     this.gameStates = {
       START: 0,
       RUN: 1,
@@ -45,25 +41,22 @@ class Game {
 
     this.lives = 3;
 
-    this.liveImg = new Image();
-    this.deathImg = new Image();
-    this.liveImg.src = "sprites/live.png";
-    this.deathImg.src = "sprites/death.png";
+    this.res = res;
 
-    Hero.img.src = "sprites/lama-spritesheet.png";
-    Enemy.img.src = "sprites/bee-spritesheet.png";
-    Bonus.img.src = "sprites/bonus-spritesheet.png";
-    Weapon.img.src = "sprites/weapon-spritesheet.png";
-    Background.img.src = "sprites/bg.png";
+    // Hero.img.src = "sprites/lama-spritesheet.png";
+    // Enemy.img.src = "sprites/bee-spritesheet.png";
+    // Bonus.img.src = "sprites/bonus-spritesheet.png";
+    // Weapon.img.src = "sprites/weapon-spritesheet.png";
+    // Background.img.src = "sprites/bg.png";
 
-    this.sounds = {
-      bg: new Audio(),
-      shootHero: new Audio(),
-      shootEnemy: new Audio()
-    };
-    this.sounds.bg.src = "sound-effects/bg-bit.mp3";
-    this.sounds.shootHero.src = "sound-effects/eeea.mp3";
-    this.sounds.shootEnemy.src = "sound-effects/vaaa.mp3";
+    // this.sounds = {
+    //   bg: new Audio(),
+    //   shootHero: new Audio(),
+    //   shootEnemy: new Audio()
+    // };
+    // this.sounds.bg.src = "sound-effects/bg-bit.mp3";
+    // this.sounds.shootHero.src = "sound-effects/eeea.mp3";
+    // this.sounds.shootEnemy.src = "sound-effects/vaaa.mp3";
 
     this.hero = new Hero({
       x: this.width / 2 - c.hw / 2,
@@ -153,8 +146,8 @@ class Game {
       Platform.spawnNew(this, i * 200 - 100);
     }
 
-    this.sounds.bg.loop = true;
-    this.sounds.bg.play();
+    this.res.cache["sound_background"].loop = true;
+    this.res.cache["sound_background"].play();
 
     if (this.currentGameState === this.gameStates.DEATH ||
         this.currentGameState === this.gameStates.GAMEOVER) {
