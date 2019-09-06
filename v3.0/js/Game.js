@@ -56,6 +56,15 @@ class Game {
     Weapon.img.src = "sprites/weapon-spritesheet.png";
     Background.img.src = "sprites/bg.png";
 
+    this.sounds = {
+      bg: new Audio(),
+      shootHero: new Audio(),
+      shootEnemy: new Audio()
+    };
+    this.sounds.bg.src = "sound-effects/bg-bit.mp3";
+    this.sounds.shootHero.src = "sound-effects/eeea.mp3";
+    this.sounds.shootEnemy.src = "sound-effects/vaaa.mp3";
+
     this.hero = new Hero({
       x: this.width / 2 - c.hw / 2,
       y: this.height - c.hh - 100,
@@ -143,6 +152,9 @@ class Game {
     for (let i = 0; i < (this.height / 200); i++) {
       Platform.spawnNew(this, i * 200 - 100);
     }
+
+    this.sounds.bg.loop = true;
+    this.sounds.bg.play();
 
     if (this.currentGameState === this.gameStates.DEATH ||
         this.currentGameState === this.gameStates.GAMEOVER) {

@@ -4,6 +4,7 @@ import GameObject from "./GameObject.js"
 import Bullet from "./Bullet.js"
 import SpriteState from "./SpriteState.js"
 import Sprite from "./Sprite.js"
+import Enemy from "./Enemy.js"
 
 class Weapon extends GameObject {
   static img = new Image();
@@ -95,6 +96,12 @@ class Weapon extends GameObject {
           damage: this.bulletDamage
         }, this.owner, this.game)
     );
+
+    if (this.owner instanceof Enemy) {
+      this.game.sounds.shootEnemy.cloneNode().play();
+    } else {
+      this.game.sounds.shootHero.cloneNode().play();
+    }
   }
 
   reload(deltaTime) {
