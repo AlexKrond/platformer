@@ -9,7 +9,7 @@ const c = {
   coinSpawnFrequency:       0.007,
   aidKitSpawnFrequency:       0.0006,
   // crashPlatformFrequency:    2,
-  crashPlatformFrequency:    0.2,
+  crashPlatformFrequency:    0.0,
   horizontalBraking:         10,
   acceleration:              100,
   maxSpeed:                  250,
