@@ -146,23 +146,39 @@ class EnemyAI {
   }
 
   findRightTP(plats, xMin, xMax) {
+    let tmpPlat;
     for (let x = xMax; x >= xMin; x -= 5) {
-      this.targetPlatform = this.getPlatform(plats, x, "right");
+      tmpPlat = this.getPlatform(plats, x, "right");
 
-      if (this.targetPlatform) {
-        this.xPosForJumpToTheTP = x;
-        break;
+      if (tmpPlat) {
+        if (this.targetPlatform) {
+          if (tmpPlat.y < this.targetPlatform.y) {
+            this.targetPlatform = tmpPlat;
+            this.xPosForJumpToTheTP = x;
+          }
+        } else {
+          this.targetPlatform = tmpPlat;
+          this.xPosForJumpToTheTP = x;
+        }
       }
     }
   }
 
   findLeftTP(plats, xMin, xMax) {
+    let tmpPlat;
     for (let x = xMin; x <= xMax; x += 5) {
-      this.targetPlatform = this.getPlatform(plats, x, "left");
+      tmpPlat = this.getPlatform(plats, x, "left");
 
-      if (this.targetPlatform) {
-        this.xPosForJumpToTheTP = x;
-        break;
+      if (tmpPlat) {
+        if (this.targetPlatform) {
+          if (tmpPlat.y < this.targetPlatform.y) {
+            this.targetPlatform = tmpPlat;
+            this.xPosForJumpToTheTP = x;
+          }
+        } else {
+          this.targetPlatform = tmpPlat;
+          this.xPosForJumpToTheTP = x;
+        }
       }
     }
   }
