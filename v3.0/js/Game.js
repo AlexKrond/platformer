@@ -11,7 +11,7 @@ import Coin from "./Coin.js"
 import AidKit from "./AidKit.js"
 
 class Game {
-  constructor(res) {
+  constructor(cnv, res) {
     this.gameStates = {
       START: 0,
       RUN: 1,
@@ -21,11 +21,11 @@ class Game {
     };
     this.currentGameState = null;
 
-    this.width = c.gameWidth;
-    this.height = c.gameHeight;
-
-    this.canvas = null;
+    this.canvas = cnv;
     this.res = res;
+
+    this.width = this.canvas.width;
+    this.height = this.canvas.height;
 
     this.screenMoveSpeed = c.screenMoveSpeed;
 

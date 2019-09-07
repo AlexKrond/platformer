@@ -1,11 +1,15 @@
 "use strict";
 
-import Game from "./Game.js";
+import Game from "./Game.js"
 import ResourceLoader from "./ResourceLoader.js"
 import Resource from "./Resource.js"
+import c from "./const.js"
 
 const cnv = document.querySelector("#game");
 const ctx = cnv.getContext("2d");
+
+cnv.width = c.gameWidth;
+cnv.height = c.gameHeight;
 
 const res = new ResourceLoader();
 res.load([
@@ -24,15 +28,12 @@ res.load([
 let game;
 let lastTime = 0;
 
+loading();
+
 res.onLoad(start);
 
 function start() {
-  game = new Game(res);
-
-  game.canvas = cnv;
-
-  cnv.width = game.width;
-  cnv.height = game.height;
+  game = new Game(cnv, res);
 
   game.start();
 
@@ -47,4 +48,14 @@ function gameLoop(timeStamp) {
   game.draw(ctx);
 
   requestAnimationFrame(gameLoop);
+}
+
+function loading() {
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, cnv.width, cnv.height);
+
+  ctx.fillStyle = "white";
+  ctx.font = "50px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("LOADING...", cnv.width / 2, cnv.height / 2);
 }
