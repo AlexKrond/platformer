@@ -10,7 +10,7 @@ class Coin extends Bonus {
 
   draw(ctx) {
     ctx.drawImage(
-        Bonus.img,
+        this.game.res.get("bonus"),
 
         this.currentSpriteState[0] * this.frameWidth + 50,
         this.currentSpriteState[1] * this.frameHeight + 50,

@@ -7,8 +7,6 @@ import SpriteState from "./SpriteState.js"
 import Weapon from "./Weapon.js"
 
 class Hero extends Character {
-  static img = new Image();
-
   constructor(props, game) {
     super(props, game);
     this.game = game;
@@ -22,7 +20,7 @@ class Hero extends Character {
       standLeft: new SpriteState([7], 0, "single"),
       moveLeft: new SpriteState([7, 8, 9, 10, 11], 0, "cyclical")
     };
-    this.sprite = new Sprite(200, 200, this.spriteStates.standRight, this);
+    this.sprite = new Sprite(this.game.res.get("hero"), 200, 200, this.spriteStates.standRight, this);
     this.afterBottomCollisionTimer = 0;
 
     this.fire = false;

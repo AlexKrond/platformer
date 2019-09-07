@@ -3,7 +3,6 @@
 import c from "./const.js"
 import detectCollision from "./detectCollision.js"
 import GameObject from "./GameObject.js"
-import Sprite from "./Sprite.js"
 
 class Character extends GameObject {
   constructor(props, game) {

@@ -3,19 +3,15 @@
 import c from "./const.js"
 import InputHandler from "./InputHandler.js"
 import InputHandlerGameState from "./InputHandlerGameState.js"
-import Character from "./Character.js"
 import Enemy from "./Enemy.js"
 import Hero from "./Hero.js"
-import Bonus from "./Bonus.js"
 import Platform from "./Platform.js"
-import CrashedPlatform from "./СrashedPlatform.js"
-import Weapon from "./Weapon.js"
 import Background from "./Background.js"
 import Coin from "./Coin.js"
 import AidKit from "./AidKit.js"
 
 class Game {
-  constructor() {
+  constructor(cnv, res) {
     this.gameStates = {
       START: 0,
       RUN: 1,
@@ -25,9 +21,11 @@ class Game {
     };
     this.currentGameState = null;
 
-    this.width = c.gameWidth;
-    this.height = c.gameHeight;
-    this.canvas = null;
+    this.canvas = cnv;
+    this.res = res;
+
+    this.width = this.canvas.width;
+    this.height = this.canvas.height;
 
     this.screenMoveSpeed = c.screenMoveSpeed;
 
@@ -44,26 +42,6 @@ class Game {
     this.bonusScore = 0;
 
     this.lives = 3;
-
-    this.liveImg = new Image();
-    this.deathImg = new Image();
-    this.liveImg.src = "sprites/live.png";
-    this.deathImg.src = "sprites/death.png";
-
-    Hero.img.src = "sprites/lama-spritesheet.png";
-    Enemy.img.src = "sprites/bee-spritesheet.png";
-    Bonus.img.src = "sprites/bonus-spritesheet.png";
-    Weapon.img.src = "sprites/weapon-spritesheet.png";
-    Background.img.src = "sprites/bg.png";
-
-    this.sounds = {
-      bg: new Audio(),
-      shootHero: new Audio(),
-      shootEnemy: new Audio()
-    };
-    this.sounds.bg.src = "sound-effects/bg-bit.mp3";
-    this.sounds.shootHero.src = "sound-effects/eeea.mp3";
-    this.sounds.shootEnemy.src = "sound-effects/vaaa.mp3";
 
     this.hero = new Hero({
       x: this.width / 2 - c.hw / 2,
@@ -140,8 +118,8 @@ class Game {
       }, this)
     ];
 
-    const bgW = Background.img.width;
-    const bgH = Background.img.height;
+    const bgW = this.res.get("background").width;
+    const bgH = this.res.get("background").height;
     this.bg = new Background({
       x: -(bgW - this.width) / 2,
       y: -bgH + this.height,
@@ -153,8 +131,8 @@ class Game {
       Platform.spawnNew(this, i * 200 - 100);
     }
 
-    this.sounds.bg.loop = true;
-    this.sounds.bg.play();
+    this.res.get("sound_background").loop = true;
+    this.res.get("sound_background").play();
 
     if (this.currentGameState === this.gameStates.DEATH ||
         this.currentGameState === this.gameStates.GAMEOVER) {
@@ -279,9 +257,9 @@ class Game {
   drawLives(ctx, x, y, scale = 1) {
     const size = 24;
 
-    let liveImgs = [this.deathImg, this.deathImg, this.deathImg];
+    let liveImgs = [this.res.get("death"), this.res.get("death"), this.res.get("death")];
     for (let i = 0; i < this.lives; i++) {
-      liveImgs[i] = this.liveImg;
+      liveImgs[i] = this.res.get("live");
     }
 
     ctx.drawImage(liveImgs[0], x - size * scale / 2 - size * scale * 1.2, y, size * scale, size * scale);

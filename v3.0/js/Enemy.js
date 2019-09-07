@@ -8,8 +8,6 @@ import SpriteState from "./SpriteState.js"
 import Sprite from "./Sprite.js"
 
 class Enemy extends Character {
-  static img = new Image();
-
   constructor(props, game) {
     super(props, game);
     this.health = 100;
@@ -27,7 +25,7 @@ class Enemy extends Character {
       right: new SpriteState([0, 1, 2, 3, 4], 0, "cyclical"),
       left: new SpriteState([5, 6, 7, 8, 9], 0, "cyclical")
     };
-    this.sprite = new Sprite(162, 162, this.spriteStates.right, this, 60);
+    this.sprite = new Sprite(this.game.res.get("enemy"), 162, 162, this.spriteStates.right, this, 60);
   }
 
   onlySuperUpdate(deltaTime) {
