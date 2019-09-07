@@ -1,9 +1,9 @@
 "use strict";
 
 class Sprite {
-  constructor(frameWidth, frameHeight, startState, gameObject, timeUpdate) {
+  constructor(img, frameWidth, frameHeight, startState, gameObject, timeUpdate) {
     this.gameObject = gameObject;
-    this.img = gameObject.constructor.img;
+    this.img = img;
 
     this.frameWidth = frameWidth;
     this.frameHeight = frameHeight;

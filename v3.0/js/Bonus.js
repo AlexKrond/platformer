@@ -4,8 +4,6 @@ import GameObject from "./GameObject.js"
 import detectCollision from "./detectCollision.js";
 
 class Bonus extends GameObject {
-  static img = new Image();
-
   constructor(props, game) {
     super(props, game);
 
@@ -38,7 +36,7 @@ class Bonus extends GameObject {
 
   draw(ctx) {
     ctx.drawImage(
-        Bonus.img,
+        this.game.res.get("bonus"),
 
         this.currentSpriteState[0] * this.frameWidth,
         this.currentSpriteState[1] * this.frameHeight,

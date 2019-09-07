@@ -8,25 +8,25 @@ class ResourceLoader {
 
   load(resources) {
     resources.forEach(res => {
+      this.cache[res.name] = false;
       let resDOM;
 
-      switch (res.type) {
-        case "image":
-          resDOM = new Image();
-          break;
-        case "sound":
-          resDOM = new Audio();
-      }
-
-      this.cache[res.name] = false;
-
-      resDOM.onload = () => {
+      const ready = () => {
         this.cache[res.name] = resDOM;
-
         if (this.isLoad() && this.callback) {
           this.callback();
         }
       };
+
+      switch (res.type) {
+        case "image":
+          resDOM = new Image();
+          resDOM.onload = ready;
+          break;
+        case "sound":
+          resDOM = new Audio();
+          resDOM.oncanplaythrough = ready;
+      }
 
       resDOM.src = res.url;
     });
@@ -40,7 +40,7 @@ class ResourceLoader {
     if (callback instanceof Function) {
       this.callback = callback;
     } else {
-      throw new Error("В качестве колбека должна быть фугкция");
+      throw new Error("В качестве колбека должна быть функция");
     }
 
     if (this.isLoad()) {
@@ -52,7 +52,9 @@ class ResourceLoader {
     let isLoad = true;
 
     for (let res in this.cache) {
-      isLoad = isLoad && res;
+      if (this.cache.hasOwnProperty(res)) {
+        isLoad = isLoad && this.cache[res];
+      }
     }
 
     return isLoad

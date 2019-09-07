@@ -21,18 +21,19 @@ res.load([
   new Resource("sound_shootEnemy", "sound-effects/vaaa.mp3", "sound"),
 ]);
 
-const game = new Game(res);
-game.canvas = cnv;
-
-cnv.width = game.width;
-cnv.height = game.height;
-
-
+let game;
 let lastTime = 0;
 
 res.onLoad(start);
 
 function start() {
+  game = new Game(res);
+
+  game.canvas = cnv;
+
+  cnv.width = game.width;
+  cnv.height = game.height;
+
   game.start();
 
   requestAnimationFrame(gameLoop);

@@ -7,8 +7,6 @@ import Sprite from "./Sprite.js"
 import Enemy from "./Enemy.js"
 
 class Weapon extends GameObject {
-  static img = new Image();
-
   constructor(props, owner, game) {
     super(props, game);
     this.owner = owner;
@@ -32,7 +30,7 @@ class Weapon extends GameObject {
       right: new SpriteState([1], 0, "single"),
       left: new SpriteState([0], 0, "single")
     };
-    this.sprite = new Sprite(362, 145, this.spriteStates.right, this, 10);
+    this.sprite = new Sprite(this.game.res.get("weapon"), 362, 145, this.spriteStates.right, this, 10);
   }
 
   update(deltaTime, xTarget, yTarget) {
@@ -98,9 +96,9 @@ class Weapon extends GameObject {
     );
 
     if (this.owner instanceof Enemy) {
-      this.game.sounds.shootEnemy.cloneNode().play();
+      this.game.res.get("sound_shootEnemy").cloneNode().play();
     } else {
-      this.game.sounds.shootHero.cloneNode().play();
+      this.game.res.get("sound_shootHero").cloneNode().play();
     }
   }
 

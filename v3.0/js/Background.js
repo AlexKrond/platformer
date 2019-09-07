@@ -3,8 +3,6 @@
 import c from "./const.js"
 
 class Background {
-  static img = new Image();
-
   constructor({x, y, w, h}, game) {
     this.game = game;
 
@@ -19,7 +17,7 @@ class Background {
   }
 
   draw(ctx) {
-    ctx.drawImage(Background.img, -this.x, -this.y, this.game.width, this.game.height, 0, 0, this.game.width, this.game.height);
+    ctx.drawImage(this.game.res.get("background"), -this.x, -this.y, this.game.width, this.game.height, 0, 0, this.game.width, this.game.height);
   }
 }
 
