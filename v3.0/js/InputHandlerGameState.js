@@ -5,14 +5,17 @@ class InputHandlerGameState {
         switch (game.currentGameState) {
           case game.gameStates.START:
             game.currentGameState = game.gameStates.RUN;
+            game.playBackgroundMusic();
             break;
 
           case game.gameStates.RUN:
             game.currentGameState = game.gameStates.PAUSE;
+            game.setBackgroundMusicVolume(0.2);
             break;
 
           case game.gameStates.PAUSE:
             game.currentGameState = game.gameStates.RUN;
+            game.setBackgroundMusicVolume(1);
             break;
 
           case game.gameStates.DEATH:

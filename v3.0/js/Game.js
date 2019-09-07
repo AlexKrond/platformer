@@ -23,6 +23,7 @@ class Game {
 
     this.canvas = cnv;
     this.res = res;
+    this.res.get("sound_background").loop = true;
 
     this.width = this.canvas.width;
     this.height = this.canvas.height;
@@ -131,15 +132,20 @@ class Game {
       Platform.spawnNew(this, i * 200 - 100);
     }
 
-    this.res.get("sound_background").loop = true;
-    this.res.get("sound_background").play();
-
     if (this.currentGameState === this.gameStates.DEATH ||
         this.currentGameState === this.gameStates.GAMEOVER) {
       this.currentGameState = this.gameStates.RUN;
     } else {
       this.currentGameState = this.gameStates.START;
     }
+  }
+
+  playBackgroundMusic() {
+    this.res.get("sound_background").play();
+  }
+
+  setBackgroundMusicVolume(volume) {
+    this.res.get("sound_background").volume = volume;
   }
 
   update(deltaTime) {
