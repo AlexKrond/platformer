@@ -21,8 +21,10 @@ res.load([
   new Resource("weapon", "sprites/weapon-spritesheet.png", "image"),
   new Resource("background", "sprites/bg.png", "image"),
   new Resource("sound_background", "sound-effects/bg-bit.mp3", "sound"),
-  new Resource("sound_shootHero", "sound-effects/eeea.mp3", "sound"),
-  new Resource("sound_shootEnemy", "sound-effects/vaaa.mp3", "sound"),
+  // new Resource("sound_shootHero", "sound-effects/eeea.mp3", "sound"),
+  new Resource("sound_shootHero", "sound-effects/raaa.mp3", "sound"),
+  // new Resource("sound_shootEnemy", "sound-effects/vaaa.mp3", "sound")
+  new Resource("sound_shootEnemy", "sound-effects/eeea.mp3", "sound")
 ]);
 
 let game;
