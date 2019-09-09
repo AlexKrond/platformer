@@ -262,19 +262,19 @@ class EnemyAI {
 
     switch (side) {
       case "left":
-        if (p.y > (this.enemy.lastBottomCollidePlatform.y + this.enemy.lastBottomCollidePlatform.h)) {
-          x = this.enemy.lastBottomCollidePlatform.x - p.x; // TODO: -5 или отдельная провверка x > 5
-        } else {
+        // if (p.y > (this.enemy.lastBottomCollidePlatform.y + this.enemy.lastBottomCollidePlatform.h)) {
+        //   x = this.enemy.lastBottomCollidePlatform.x - p.x - 5; // TODO: -5 или отдельная провверка x > 5
+        // } else {
           x = xPos - (p.x + p.w);
-        }
+        // }
         break;
 
       case "right":
-        if (p.y > (this.enemy.lastBottomCollidePlatform.y + this.enemy.lastBottomCollidePlatform.h)) {
-          x = (p.x + p.w) - (this.enemy.lastBottomCollidePlatform.x + this.enemy.lastBottomCollidePlatform.w); // TODO: -5 или отдельная провверка x > 5
-        } else {
+        // if (p.y > (this.enemy.lastBottomCollidePlatform.y + this.enemy.lastBottomCollidePlatform.h)) {
+        //   x = (p.x + p.w) - (this.enemy.lastBottomCollidePlatform.x + this.enemy.lastBottomCollidePlatform.w) - 5; // TODO: -5 или отдельная провверка x > 5
+        // } else {
           x = p.x - (xPos + this.enemy.w);
-        }
+        // }
         break;
 
       default:
@@ -305,7 +305,7 @@ class EnemyAI {
     shadowCopy.lastBottomCollidePlatform = this.enemy.lastBottomCollidePlatform;
     shadowCopy.AI.beforeLastBottomCollidePlatform = shadowCopy.lastBottomCollidePlatform;
 
-    const deltaTime = 1 / 30;
+    const deltaTime = 1 / 20;
     let timeForJump = 5;
 
     while (timeForJump > 0) {
