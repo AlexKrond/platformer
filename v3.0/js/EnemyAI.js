@@ -14,21 +14,29 @@ class EnemyAI {
 
     // Максимальная высота прыжка
     // TODO: высота прыжка может быть больше при падении с большой высоты
-    this.maxJumpHeight = (this.enemy.jumpForce * this.enemy.jumpForce * 0.98) / (2 * this.game.gravity);
+    this.maxJumpHeight = (this.enemy.jumpForce * this.enemy.jumpForce) / (2 * this.game.gravity);
 
     // Горизонтальное расстояние (при движении вправо или влево) для достижения максимальной высоты прыжка
     this.xForMaxJumpHeight = this.getXForMaxJumpHeight();
 
     this.targetPlatform = null;
+    this.targetPlatformSide = null;
+
     this.beforeLastBottomCollidePlatform = this.enemy.lastBottomCollidePlatform;
+
     this.xPosForJumpToTheTP = null;
     this.isJumping = false;
   }
 
   update() {
+    this.enemy.goLeft = false;
+    this.enemy.goRight = false;
     // Если отсутствует последняя платформа на которую приземлялись (только отспавнились или платформа сломалась)
     // TODO: добавить обработку падения с поиском платформы для приземления
-    if (!this.enemy.lastBottomCollidePlatform) return;
+    if (!this.enemy.lastBottomCollidePlatform || this.enemy.lastBottomCollidePlatform.isCrashed === true) {
+      this.enemy.jump = false;
+      return;
+    }
 
     // Перекрасим все платформы в черный, а целевую (если есть) в красный
     this.game.platforms.forEach(p => p.color = "black");
@@ -50,17 +58,16 @@ class EnemyAI {
   }
 
   goToXPosForJumpToTheTP() {
-    this.enemy.goLeft = false;
-    this.enemy.goRight = false;
-
     if ((this.enemy.x + this.enemy.xv / this.enemy.horizontalBraking) > this.xPosForJumpToTheTP + 5) {
       this.enemy.goLeft = true;
     } else if ((this.enemy.x + this.enemy.xv / this.enemy.horizontalBraking) < this.xPosForJumpToTheTP - 5) {
       this.enemy.goRight = true;
     } else {
-      // TODO: сначала остановиться, потом прыгнуть
       this.enemy.x = this.xPosForJumpToTheTP - this.enemy.xv / this.enemy.horizontalBraking;
-      this.xPosForJumpToTheTP = null;
+
+      if (this.enemy.xv === 0) {
+        this.xPosForJumpToTheTP = null;
+      }
     }
   }
 
@@ -77,77 +84,115 @@ class EnemyAI {
     // Фактически, прыжок произойдет только после bottom коллизии
     if (this.enemy.yv > -this.enemy.jumpForce * 0.95 && !this.isJumping) return;
     this.isJumping = true;
+    this.enemy.jump = false;
 
+    const tp = this.targetPlatform;
+    const lp = this.enemy.lastBottomCollidePlatform;
 
     switch (true) {
-      case ((this.targetPlatform.x + this.targetPlatform.w) < this.enemy.x ||
-          (this.targetPlatform.x < this.enemy.x &&
-              (this.enemy.y + this.enemy.h) < this.targetPlatform.y)):
-        if (this.enemy.x > (this.targetPlatform.x + this.targetPlatform.w -
+      // case ((tp.y > (lp.y + lp.h)) ||
+      //     ((lp.x > tp.x) && (lp.x < (tp.x + tp.w))) ||
+      //     (((lp.x + lp.w) > tp.x) && ((lp.x + lp.w) < (tp.x + tp.w)))):
+      //
+      //   switch (this.targetPlatformSide) {
+      //     case "left":
+      //       if ((this.enemy.x + this.enemy.w + this.enemy.xv / this.enemy.horizontalBraking) >= lp.x) {
+      //         this.enemy.goLeft = true;
+      //       }
+      //       break;
+      //
+      //     case "right":
+      //       if ((this.enemy.x + this.enemy.xv / this.enemy.horizontalBraking) <= (lp.x + lp.w)) {
+      //         this.enemy.goRight = true;
+      //       }
+      //       break;
+      //   }
+      //   break;
+
+      case ((tp.x + tp.w) < this.enemy.x || (tp.x < this.enemy.x && (this.enemy.y + this.enemy.h) < tp.y)):
+
+        if (this.enemy.x > (tp.x + tp.w -
             this.enemy.xv / this.enemy.horizontalBraking + 10)) {
           this.enemy.goLeft = true;
         } else if ((this.enemy.x + this.enemy.w + this.enemy.xv / this.enemy.horizontalBraking) <=
-            (this.targetPlatform.x + this.targetPlatform.w)) {
+            (tp.x + tp.w)) {
           this.enemy.goLeft = false;
           this.enemy.jump = false;
-        } else if ((this.enemy.y + this.enemy.h) < this.targetPlatform.y) {
+        } else if ((this.enemy.y + this.enemy.h) < tp.y) {
           this.enemy.goLeft = true;
         } else {
           this.enemy.goLeft = false;
         }
         break;
 
-      case (this.targetPlatform.x > (this.enemy.x + this.enemy.w) ||
-          ((this.targetPlatform.x + this.targetPlatform.w) > (this.enemy.x + this.enemy.w) &&
-              (this.enemy.y + this.enemy.h) < this.targetPlatform.y)):
-        if ((this.enemy.x + this.enemy.w) < (this.targetPlatform.x -
+      case (tp.x > (this.enemy.x + this.enemy.w) || ((tp.x + tp.w) > (this.enemy.x + this.enemy.w) && (this.enemy.y + this.enemy.h) < tp.y)):
+
+        if ((this.enemy.x + this.enemy.w) < (tp.x -
             this.enemy.xv / this.enemy.horizontalBraking - 10)) {
           this.enemy.goRight = true;
         } else if ((this.enemy.x + this.enemy.xv / this.enemy.horizontalBraking) >=
-            this.targetPlatform.x) {
+            tp.x) {
           this.enemy.goRight = false;
           this.enemy.jump = false;
-        } else if ((this.enemy.y + this.enemy.h) < this.targetPlatform.y) {
+        } else if ((this.enemy.y + this.enemy.h) < tp.y) {
           this.enemy.goRight = true;
         } else {
           this.enemy.goRight = false;
         }
         break;
-
-      // default:
-      //   this.targetPlatform = null;
-      //   this.isJumping = false;
-      //   break;
     }
   }
 
   findTargetPlatform() {
-    this.enemy.goLeft = false;
-    this.enemy.goRight = false;
-    this.enemy.jump = false;
-
     const plats = this.game.platforms.filter(p => (this.enemy.lastBottomCollidePlatform.y - p.y) < this.maxJumpHeight);
 
-    // TODO: ограничить по краям экрана
-    let xMin = this.enemy.lastBottomCollidePlatform.x - this.enemy.w + 10;
-    let xMax = this.enemy.lastBottomCollidePlatform.x + this.enemy.lastBottomCollidePlatform.w - 10;
+    let xMin = this.enemy.lastBottomCollidePlatform.x - this.enemy.w + 5;
+    let xMax = this.enemy.lastBottomCollidePlatform.x + this.enemy.lastBottomCollidePlatform.w - 5;
 
-    if ((this.enemy.x + this.enemy.w) < this.game.hero.x) {
+    xMin = (xMin < 0) ? 0 : xMin;
+    xMax = (xMax > this.game.width) ? this.game.width : xMax;
 
-      this.setTargetPlatform(plats, xMin, xMax, "right");
-      if (!this.targetPlatform) this.setTargetPlatform(plats, xMin, xMax, "left");
+    switch (true) {
+      case (this.enemy.x < this.game.width * 0.20):
+        this.setRightTargetPlatform(plats, xMin, xMax);
+        break;
 
-    } else if (this.enemy.x > (this.game.hero.x + this.game.hero.w)) {
+      case (this.enemy.x > this.game.width * 0.80):
+        this.setLeftTargetPlatform(plats, xMin, xMax);
+        break;
 
-      this.setTargetPlatform(plats, xMin, xMax, "left");
-      if (!this.targetPlatform) this.setTargetPlatform(plats, xMin, xMax, "right");
+      case ((this.enemy.x + this.enemy.w) < this.game.hero.x):
+        this.setRightTargetPlatform(plats, xMin, xMax);
+        break;
 
+      case (this.enemy.x > (this.game.hero.x + this.game.hero.w)):
+        this.setLeftTargetPlatform(plats, xMin, xMax);
+        break;
+
+      case ((this.enemy.x + this.enemy.w / 2) < (this.game.width / 2)):
+        this.setRightTargetPlatform(plats, xMin, xMax);
+        break;
+
+      default:
+        this.setLeftTargetPlatform(plats, xMin, xMax);
+        break;
     }
 
     this.beforeLastBottomCollidePlatform = this.enemy.lastBottomCollidePlatform;
   }
 
+  setLeftTargetPlatform(plats, xMin, xMax) {
+    this.setTargetPlatform(plats, xMin, xMax, "left");
+    if (!this.targetPlatform) this.setTargetPlatform(plats, xMin, xMax, "right");
+  }
+
+  setRightTargetPlatform(plats, xMin, xMax) {
+    this.setTargetPlatform(plats, xMin, xMax, "right");
+    if (!this.targetPlatform) this.setTargetPlatform(plats, xMin, xMax, "left");
+  }
+
   setTargetPlatform(plats, xMin, xMax, side) {
+    this.targetPlatformSide = side;
     let checkedPlats = new Map();
 
     const searchCheckedPlatforms = x => {
@@ -164,14 +209,16 @@ class EnemyAI {
       });
     };
 
+    let step = 10;
+
     switch (side) {
       case "left":
-        for (let x = xMin; x <= xMax; x += 5) {
+        for (let x = xMin; x <= xMax; x += step) {
           searchCheckedPlatforms(x);
         }
         break;
       case "right":
-        for (let x = xMax; x >= xMin; x -= 5) {
+        for (let x = xMax; x >= xMin; x -= step) {
           searchCheckedPlatforms(x);
         }
         break;
@@ -215,11 +262,21 @@ class EnemyAI {
 
     switch (side) {
       case "left":
-        x = (xPos + 5) - (p.x + p.w);
+        if (p.y > (this.enemy.lastBottomCollidePlatform.y + this.enemy.lastBottomCollidePlatform.h)) {
+          x = this.enemy.lastBottomCollidePlatform.x - p.x; // TODO: -5 или отдельная провверка x > 5
+        } else {
+          x = xPos - (p.x + p.w);
+        }
         break;
+
       case "right":
-        x = p.x - (xPos + this.enemy.w - 5);
+        if (p.y > (this.enemy.lastBottomCollidePlatform.y + this.enemy.lastBottomCollidePlatform.h)) {
+          x = (p.x + p.w) - (this.enemy.lastBottomCollidePlatform.x + this.enemy.lastBottomCollidePlatform.w); // TODO: -5 или отдельная провверка x > 5
+        } else {
+          x = p.x - (xPos + this.enemy.w);
+        }
         break;
+
       default:
         throw new Error(`Неправильная сторона. side=${side}`);
     }
@@ -238,15 +295,17 @@ class EnemyAI {
       h: this.enemy.h,
       xv: this.enemy.xv,
       yv: this.enemy.yv,
-      gravityIsUsed: true
+      gravityIsUsed: true,
+      canDestroyPlatform: false
     }, this.game);
 
     shadowCopy.AI.targetPlatform = tp;
+    shadowCopy.AI.targetPlatformSide = this.targetPlatformSide;
     shadowCopy.AI.xPosForJumpToTheTP = xPos;
     shadowCopy.lastBottomCollidePlatform = this.enemy.lastBottomCollidePlatform;
     shadowCopy.AI.beforeLastBottomCollidePlatform = shadowCopy.lastBottomCollidePlatform;
 
-    const deltaTime = 1/ 20;
+    const deltaTime = 1 / 30;
     let timeForJump = 5;
 
     while (timeForJump > 0) {

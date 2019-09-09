@@ -23,6 +23,7 @@ class Character extends GameObject {
     this.wasTopCollision = false;
     this.wasBottomCollision = false;
 
+    this.canDestroyPlatform = (props.canDestroyPlatform === undefined) ? true : props.canDestroyPlatform;
     // this.sprite = null;
   }
 
@@ -133,7 +134,8 @@ class Character extends GameObject {
           this.y = platform.y - this.h;
           this.rebound(platform);
 
-          if (platform.y < this.game.height * 0.66 &&
+          if (this.canDestroyPlatform &&
+              platform.y < this.game.height * 0.66 &&
               Math.random() < this.game.crashPlatformFrequency &&
               platform !== this.lastBottomCollidePlatform) {
             platform.isCrashed = true;
