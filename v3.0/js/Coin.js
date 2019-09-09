@@ -26,6 +26,7 @@ class Coin extends Bonus {
 
   applyEffect() {
     this.game.bonusScore += 100;
+    this.game.res.get("sound_coin").cloneNode().play();
   }
 }
 
