@@ -73,7 +73,8 @@ class EnemyAI {
 
   jumpToTheTargetPlatform() {
     if (this.enemy.lastBottomCollidePlatform === this.targetPlatform ||
-        this.beforeLastBottomCollidePlatform !== this.enemy.lastBottomCollidePlatform) {
+        this.beforeLastBottomCollidePlatform !== this.enemy.lastBottomCollidePlatform ||
+        (-this.targetPlatform.y + this.enemy.lastBottomCollidePlatform.y) >= this.maxJumpHeight) {
       this.targetPlatform = null;
       this.isJumping = false;
       return;
@@ -89,57 +90,60 @@ class EnemyAI {
     const tp = this.targetPlatform;
     const lp = this.enemy.lastBottomCollidePlatform;
 
-    switch (true) {
-      // case ((tp.y > (lp.y + lp.h)) ||
-      //     ((lp.x > tp.x) && (lp.x < (tp.x + tp.w))) ||
-      //     (((lp.x + lp.w) > tp.x) && ((lp.x + lp.w) < (tp.x + tp.w)))):
-      //
-      //   switch (this.targetPlatformSide) {
-      //     case "left":
-      //       if ((this.enemy.x + this.enemy.w + this.enemy.xv / this.enemy.horizontalBraking) >= lp.x) {
-      //         this.enemy.goLeft = true;
-      //       }
-      //       break;
-      //
-      //     case "right":
-      //       if ((this.enemy.x + this.enemy.xv / this.enemy.horizontalBraking) <= (lp.x + lp.w)) {
-      //         this.enemy.goRight = true;
-      //       }
-      //       break;
-      //   }
-      //   break;
+    if ((tp.y > (lp.y + lp.h)) &&
+        (((lp.x > tp.x) && (lp.x <= (tp.x + tp.w))) ||
+            (((lp.x + lp.w) >= tp.x) && ((lp.x + lp.w) < (tp.x + tp.w))))) {
 
-      case ((tp.x + tp.w) < this.enemy.x || (tp.x < this.enemy.x && (this.enemy.y + this.enemy.h) < tp.y)):
+      switch (this.targetPlatformSide) {
+        case "left":
+          if ((this.enemy.x + this.enemy.w + this.enemy.xv / this.enemy.horizontalBraking) >= lp.x) {
+            this.enemy.goLeft = true;
+          }
+          break;
 
-        if (this.enemy.x > (tp.x + tp.w -
-            this.enemy.xv / this.enemy.horizontalBraking + 10)) {
-          this.enemy.goLeft = true;
-        } else if ((this.enemy.x + this.enemy.w + this.enemy.xv / this.enemy.horizontalBraking) <=
-            (tp.x + tp.w)) {
-          this.enemy.goLeft = false;
-          this.enemy.jump = false;
-        } else if ((this.enemy.y + this.enemy.h) < tp.y) {
-          this.enemy.goLeft = true;
-        } else {
-          this.enemy.goLeft = false;
-        }
-        break;
+        case "right":
+          if ((this.enemy.x + this.enemy.xv / this.enemy.horizontalBraking) <= (lp.x + lp.w)) {
+            this.enemy.goRight = true;
+          }
+          break;
+      }
 
-      case (tp.x > (this.enemy.x + this.enemy.w) || ((tp.x + tp.w) > (this.enemy.x + this.enemy.w) && (this.enemy.y + this.enemy.h) < tp.y)):
+    } else {
 
-        if ((this.enemy.x + this.enemy.w) < (tp.x -
-            this.enemy.xv / this.enemy.horizontalBraking - 10)) {
-          this.enemy.goRight = true;
-        } else if ((this.enemy.x + this.enemy.xv / this.enemy.horizontalBraking) >=
-            tp.x) {
-          this.enemy.goRight = false;
-          this.enemy.jump = false;
-        } else if ((this.enemy.y + this.enemy.h) < tp.y) {
-          this.enemy.goRight = true;
-        } else {
-          this.enemy.goRight = false;
-        }
-        break;
+      switch (this.targetPlatformSide) {
+
+        case "left":
+
+          if (this.enemy.x > (tp.x + tp.w -
+              this.enemy.xv / this.enemy.horizontalBraking + 10)) {
+            this.enemy.goLeft = true;
+          } else if ((this.enemy.x + this.enemy.w + this.enemy.xv / this.enemy.horizontalBraking) <=
+              (tp.x + tp.w)) {
+            this.enemy.goLeft = false;
+            this.enemy.jump = false;
+          } else if ((this.enemy.y + this.enemy.h) < tp.y) {
+            this.enemy.goLeft = true;
+          } else {
+            this.enemy.goLeft = false;
+          }
+          break;
+
+        case "right":
+
+          if ((this.enemy.x + this.enemy.w) < (tp.x -
+              this.enemy.xv / this.enemy.horizontalBraking - 10)) {
+            this.enemy.goRight = true;
+          } else if ((this.enemy.x + this.enemy.xv / this.enemy.horizontalBraking) >=
+              tp.x) {
+            this.enemy.goRight = false;
+            this.enemy.jump = false;
+          } else if ((this.enemy.y + this.enemy.h) < tp.y) {
+            this.enemy.goRight = true;
+          } else {
+            this.enemy.goRight = false;
+          }
+          break;
+      }
     }
   }
 
@@ -257,24 +261,25 @@ class EnemyAI {
   }
 
   checkPlatform(p, xPos, side) {
-    const height = -p.y + this.enemy.lastBottomCollidePlatform.y;
+    const lp = this.enemy.lastBottomCollidePlatform;
+    const height = -p.y + lp.y;
     let x;
 
     switch (side) {
       case "left":
-        // if (p.y > (this.enemy.lastBottomCollidePlatform.y + this.enemy.lastBottomCollidePlatform.h)) {
-        //   x = this.enemy.lastBottomCollidePlatform.x - p.x - 5; // TODO: -5 или отдельная провверка x > 5
-        // } else {
+        if ((p.y > (lp.y + lp.h)) && (lp.x > p.x) && (lp.x <= (p.x + p.w))) {
+          x = lp.x - p.x - 5; // TODO: -5 или отдельная проверка x > 5
+        } else {
           x = xPos - (p.x + p.w);
-        // }
+        }
         break;
 
       case "right":
-        // if (p.y > (this.enemy.lastBottomCollidePlatform.y + this.enemy.lastBottomCollidePlatform.h)) {
-        //   x = (p.x + p.w) - (this.enemy.lastBottomCollidePlatform.x + this.enemy.lastBottomCollidePlatform.w) - 5; // TODO: -5 или отдельная провверка x > 5
-        // } else {
+        if ((p.y > (lp.y + lp.h)) && ((lp.x + lp.w) >= p.x) && ((lp.x + lp.w) < (p.x + p.w))) {
+          x = (p.x + p.w) - (lp.x + lp.w) - 5; // TODO: -5 или отдельная проверка x > 5
+        } else {
           x = p.x - (xPos + this.enemy.w);
-        // }
+        }
         break;
 
       default:
@@ -282,7 +287,7 @@ class EnemyAI {
     }
 
     return (x > 0 && height < this.maxJumpHeight && p.y > 0 &&
-        (p.y > (this.enemy.lastBottomCollidePlatform.y - this.motionEquation(x)) ||
+        (p.y > (lp.y - this.motionEquation(x)) ||
             x < this.xForMaxJumpHeight));
   }
 
