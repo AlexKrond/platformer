@@ -118,62 +118,6 @@ class Game {
         gravityIsUsed: true
       }, this),
       new Enemy({
-        x: 100,
-        y: c.hh + 100,
-        w: c.hw,
-        h: c.hh,
-        color: "blue",
-        gravityIsUsed: true
-      }, this),
-      new Enemy({
-        x: 200,
-        y: c.hh + 100,
-        w: c.hw,
-        h: c.hh,
-        color: "blue",
-        gravityIsUsed: true
-      }, this),
-      new Enemy({
-        x: 300,
-        y: c.hh + 100,
-        w: c.hw,
-        h: c.hh,
-        color: "blue",
-        gravityIsUsed: true
-      }, this),
-      new Enemy({
-        x: 400,
-        y: c.hh + 100,
-        w: c.hw,
-        h: c.hh,
-        color: "blue",
-        gravityIsUsed: true
-      }, this),
-      new Enemy({
-        x: 500,
-        y: c.hh + 100,
-        w: c.hw,
-        h: c.hh,
-        color: "blue",
-        gravityIsUsed: true
-      }, this),
-      new Enemy({
-        x: 600,
-        y: c.hh + 100,
-        w: c.hw,
-        h: c.hh,
-        color: "blue",
-        gravityIsUsed: true
-      }, this),
-      new Enemy({
-        x: 700,
-        y: c.hh + 100,
-        w: c.hw,
-        h: c.hh,
-        color: "blue",
-        gravityIsUsed: true
-      }, this),
-      new Enemy({
         x: 800,
         y: c.hh + 100,
         w: c.hw,
